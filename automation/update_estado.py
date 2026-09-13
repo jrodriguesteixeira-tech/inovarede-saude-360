@@ -25,7 +25,8 @@ def recent_months():
 def monthly(fn, uf, group, city_cols, value=None):
     for y,m in recent_months():
         try:
-            df=frame(fn(state=uf,year=y,month=m,group=group,as_dataframe=True,show_progress=False))
+            selected=[city_cols[0]] + ([value] if value else [])
+            df=frame(fn(state=uf,year=y,month=m,group=group,columns=selected,as_dataframe=True,show_progress=False))
             if df is None or df.empty:continue
             key=codes(df[col(df,city_cols)]); valid=key.str.len()==6
             if value:
@@ -38,7 +39,7 @@ def monthly(fn, uf, group, city_cols, value=None):
 def annual(fn, uf, group, city_cols):
     for y in range(datetime.now(timezone.utc).year-1,datetime.now(timezone.utc).year-6,-1):
         try:
-            df=frame(fn(state=uf,year=y,group=group,as_dataframe=True,show_progress=False))
+            df=frame(fn(state=uf,year=y,group=group,columns=[city_cols[0]],as_dataframe=True,show_progress=False))
             if df is None or df.empty:continue
             key=codes(df[col(df,city_cols)]); out=key[key.str.len()==6].value_counts()
             if len(out):return {str(k):int(v) for k,v in out.items()},str(y)
