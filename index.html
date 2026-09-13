@@ -332,21 +332,25 @@
         font: inherit;
       }
       .dashboard-spotlight {
-        margin-top: 22px;
-        padding: 22px;
-        border: 1px solid #9dd5cb;
-        border-radius: 18px;
-        background: linear-gradient(145deg, #ffffff, #e9faf7);
-        box-shadow: 0 16px 38px #075e5718;
+        position: relative;
+        overflow: hidden;
+        margin: 22px 0 28px;
+        padding: 28px;
+        border: 1px solid #20c9b0;
+        border-radius: 24px;
+        color: white;
+        background: radial-gradient(circle at 92% 8%, #27d3b944 0, transparent 30%), linear-gradient(135deg, #043c55 0%, #006e68 58%, #008c7a 100%);
+        box-shadow: 0 24px 60px #064e4a38;
       }
+      .dashboard-spotlight::before { content: ""; position: absolute; inset: 0 0 auto; height: 5px; background: linear-gradient(90deg, #6fffe9, #d7ff58, #4fc3f7); }
       .dashboard-top {
         display: flex;
         justify-content: space-between;
         align-items: end;
         gap: 18px;
       }
-      .dashboard-top h2 { margin: 0 0 5px; font-size: 1.35rem; }
-      .dashboard-top p { margin: 0; color: var(--muted); }
+      .dashboard-top h2 { margin: 0 0 5px; font-size: clamp(1.65rem, 3vw, 2.2rem); letter-spacing: -.035em; }
+      .dashboard-top p { margin: 0; color: #cceeea; }
       .dashboard-control { display: grid; gap: 6px; min-width: 235px; font-size: 0.82rem; font-weight: 800; }
       .dashboard-control select {
         min-height: 44px;
@@ -365,23 +369,40 @@
         margin-top: 17px;
       }
       .summary-card {
-        min-height: 108px;
-        padding: 15px;
-        border: 1px solid var(--line);
-        border-radius: 13px;
-        background: white;
+        min-height: 132px;
+        padding: 18px;
+        border: 1px solid #ffffff38;
+        border-radius: 16px;
+        background: #ffffffee;
+        color: var(--ink);
+        box-shadow: 0 10px 24px #003d3a24;
       }
       .summary-card[hidden] { display: none; }
       .summary-card small { display: block; color: var(--muted); }
-      .summary-card strong { display: block; margin-top: 10px; font-size: 1.28rem; }
+      .summary-card strong { display: block; margin-top: 11px; font-size: clamp(1.45rem, 2.5vw, 2rem); letter-spacing: -.035em; }
       .summary-card span { display: block; margin-top: 5px; color: var(--muted); font-size: 0.76rem; }
       .dashboard-link {
         display: inline-block;
         margin-top: 14px;
-        color: var(--green);
+        color: #d7ff58;
         font-weight: 800;
         text-decoration: none;
       }
+      .dashboard-spotlight > .filters { margin-top: 20px; background: #ffffff17; border-color: #ffffff38; }
+      .dashboard-spotlight > .filters label { color: white; }
+      .goals-panel { margin-top: 20px; padding: 20px; border-radius: 18px; background: #032f42aa; border: 1px solid #ffffff30; }
+      .goals-head { display: flex; justify-content: space-between; gap: 18px; align-items: start; }
+      .goals-head h3 { margin: 0 0 5px; font-size: 1.2rem; }
+      .goals-head p { margin: 0; color: #c8ebe6; font-size: .86rem; }
+      .goals-badge { padding: 7px 11px; border-radius: 999px; color: #173e38; background: #d7ff58; font-weight: 850; font-size: .76rem; white-space: nowrap; }
+      .goals-grid { display: grid; grid-template-columns: 1.2fr .8fr .8fr; gap: 11px; margin-top: 16px; }
+      .goal-card { padding: 16px; border-radius: 14px; background: #ffffff12; border: 1px solid #ffffff24; }
+      .goal-card small { display: block; color: #bfe5df; }
+      .goal-card strong { display: block; margin: 7px 0 4px; font-size: 1.35rem; }
+      .goal-card span { color: #d6efec; font-size: .76rem; }
+      .goal-track { height: 9px; margin-top: 13px; overflow: hidden; border-radius: 10px; background: #ffffff24; }
+      .goal-track i { display: block; width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #53e4cc, #d7ff58); transition: width .5s ease; }
+      .goal-disclaimer { margin: 13px 0 0; color: #bfe5df; font-size: .75rem; }
       button {
         font: inherit;
       }
@@ -591,6 +612,7 @@
           grid-template-columns: 1fr;
         }
         .dashboard-summary { grid-template-columns: 1fr 1fr; }
+        .goals-grid { grid-template-columns: 1fr; }
         .chart {
           height: 210px;
           padding: 0;
@@ -613,6 +635,7 @@
         .dashboard-top { display: grid; }
         .dashboard-control { min-width: 0; }
         .dashboard-summary { grid-template-columns: 1fr; }
+        .goals-head { display: grid; }
       }
     </style>
   </head>
@@ -624,7 +647,7 @@
           <span>Inov@Rede 360</span>
         </div>
         <nav class="nav">
-          <a href="#projeto">Projeto</a><a href="#dashboard">Dashboard</a
+          <a href="#projeto">Projeto</a><a href="#dashboard">Dashboard</a><a href="#metas">Metas automáticas</a
           ><a href="#eixos">Cinco eixos</a><a href="#dados">Dados detalhados</a
           ><a href="#resultados">Resultados</a><a href="#trl">Maturidade</a>
         </nav>
@@ -720,6 +743,34 @@
               <span id="dashboard-ambulatorial-meta">SIA/SUS • local de atendimento</span>
             </article>
           </div>
+          <section class="goals-panel" id="metas" aria-labelledby="goals-title">
+            <div class="goals-head">
+              <div>
+                <h3 id="goals-title">Metas assistenciais automáticas</h3>
+                <p>Comparação objetiva com a última competência disponível, sem metas preenchidas manualmente.</p>
+              </div>
+              <span class="goals-badge" id="goal-status">Linha de base automática</span>
+            </div>
+            <div class="goals-grid">
+              <article class="goal-card">
+                <small>Produção ambulatorial aprovada</small>
+                <strong id="goal-amb-current">Carregando…</strong>
+                <span id="goal-amb-reference">Aguardando a fonte SIA/SUS</span>
+                <div class="goal-track" aria-label="Percentual da referência automática"><i id="goal-amb-bar"></i></div>
+              </article>
+              <article class="goal-card">
+                <small>Localidade avaliada</small>
+                <strong id="goal-location">Lavras/MG</strong>
+                <span>Atualizada pelos filtros do painel</span>
+              </article>
+              <article class="goal-card">
+                <small>Regra automática</small>
+                <strong id="goal-percentage">Base inicial</strong>
+                <span>Manter ou superar a competência anterior</span>
+              </article>
+            </div>
+            <p class="goal-disclaimer">Referência operacional do piloto. Não substitui metas pactuadas na Programação Anual de Saúde.</p>
+          </section>
           <a class="dashboard-link" href="#dados">Abrir filtros e gráficos detalhados →</a>
         </section>
         <section class="section" id="eixos">
@@ -958,6 +1009,11 @@
       </main>
     </div>
     <script>
+      const dashboardSpotlight = document.getElementById("dashboard"),
+        projectHero = document.querySelector(".hero"),
+        locationFilters = document.querySelector("#dados .filters");
+      projectHero.before(dashboardSpotlight);
+      dashboardSpotlight.querySelector(".dashboard-top").after(locationFilters);
       let status = document.getElementById("status"),
         detail = document.getElementById("detail"),
         population = document.getElementById("population"),
@@ -1071,6 +1127,8 @@
             : `${place.name}/${place.uf} — ${place.id}`;
           document.getElementById("dashboard-locality").textContent =
             place.kind === "Estado" ? place.name : `${place.name}/${place.uf}`;
+          document.getElementById("goal-location").textContent =
+            place.kind === "Estado" ? place.name : `${place.name}/${place.uf}`;
           loadNationalHealth(place);
         } catch (e) {
           dot.className = "dot fail";
@@ -1173,6 +1231,35 @@
             const element = document.getElementById("dashboard-" + key);
             if (element) element.textContent = Number.isFinite(values[key]) ? fmt(values[key]) : "Indisponível";
           });
+          const currentAmb = values.ambulatorial,
+            cityCodeForGoal = place.kind === "Estado" ? null : String(place.id).slice(0, 6),
+            previousAmb = cityCodeForGoal ? data.anterior?.municipios?.[cityCodeForGoal]?.ambulatorial : null,
+            goalCurrent = document.getElementById("goal-amb-current"),
+            goalReference = document.getElementById("goal-amb-reference"),
+            goalPercentage = document.getElementById("goal-percentage"),
+            goalBar = document.getElementById("goal-amb-bar"),
+            goalStatus = document.getElementById("goal-status");
+          if (Number.isFinite(currentAmb)) {
+            goalCurrent.textContent = fmt(currentAmb) + " procedimentos";
+            if (Number.isFinite(previousAmb) && previousAmb > 0) {
+              const achievement = currentAmb / previousAmb * 100;
+              goalReference.textContent = `Referência anterior: ${fmt(previousAmb)} procedimentos`;
+              goalPercentage.textContent = achievement.toFixed(1).replace(".", ",") + "%";
+              goalBar.style.width = Math.min(100, achievement) + "%";
+              goalStatus.textContent = achievement >= 100 ? "Referência alcançada" : "Abaixo da referência";
+            } else {
+              goalReference.textContent = `Linha de base • ${String(displayedCompetences.ambulatorial || "—").replace("-", "/")}`;
+              goalPercentage.textContent = "Base inicial";
+              goalBar.style.width = "100%";
+              goalStatus.textContent = "Linha de base automática";
+            }
+          } else {
+            goalCurrent.textContent = "Sem registro válido";
+            goalReference.textContent = "Aguardando nova competência do SIA/SUS";
+            goalPercentage.textContent = "Pendente";
+            goalBar.style.width = "0";
+            goalStatus.textContent = "Aguardando dados";
+          }
           document.getElementById("cnes-total").textContent =
             Number.isFinite(values.cnes) ? fmt(values.cnes) : "Indisponível";
           document.getElementById("cnes-period").textContent =

@@ -88,6 +88,13 @@ def main():
     data={"uf":uf,"atualizado_em":datetime.now(timezone.utc).isoformat(timespec="seconds"),
       "competencias":{"cnes":cnes_p,"internacoes":sih_p,"mortalidade":sim_p,"nascimentos":nasc_p,"ambulatorial":sia_p},
       "municipios":municipios}
+    previous=Path("data")/"estados"/f"{uf}.json"
+    if previous.exists():
+        try:
+            old=json.loads(previous.read_text(encoding="utf-8"))
+            data["anterior"]={"competencias":old.get("competencias",{}),"municipios":old.get("municipios",{})}
+        except (OSError,json.JSONDecodeError):
+            pass
     out=Path("generated")/f"{uf}.json";out.parent.mkdir(exist_ok=True)
     out.write_text(json.dumps(data,ensure_ascii=False,separators=(",",":")),encoding="utf-8")
 if __name__=="__main__":main()
