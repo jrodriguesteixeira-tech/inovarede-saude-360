@@ -553,11 +553,15 @@
       .trl-step.done i { background: #5ce7cf; }
       .trl-step.current i { background: #d7ff58; box-shadow: 0 0 0 4px #d7ff5822; }
       .trl-step.current span { color: #efffb8; font-weight: 900; }
+      .trl-step.next i { background: linear-gradient(90deg, #d7ff58 0 45%, #ffffff2c 45%); }
+      .trl-step.next span { color: #efffb8; font-weight: 800; }
       .trl-evidence-progress { margin-top: 20px; padding: 15px; border-radius: 14px; background: #ffffff11; border: 1px solid #ffffff24; }
       .trl-evidence-head { display: flex; justify-content: space-between; gap: 14px; color: #d9f2ef; font-size: .82rem; }
       .trl-evidence-head strong { color: white; }
-      .trl-progress { height: 10px; margin-top: 10px; border-radius: 10px; overflow: hidden; background: #ffffff24; }
-      .trl-progress i { display: block; width: 80%; height: 100%; background: linear-gradient(90deg, #5ce7cf, #d7ff58); }
+      .trl-proof-status { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 11px; }
+      .trl-proof-status span { padding: 8px 11px; border-radius: 999px; font-size: .75rem; font-weight: 800; }
+      .trl-proof-status .available { color: #073e3a; background: #8ff5df; }
+      .trl-proof-status .pending { color: #5d4b00; background: #fff2a8; }
       .trl-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
       .trl-card { padding: 17px; border-radius: 15px; background: #ffffffee; color: var(--ink); }
       .trl-card.next { background: #f5ffd9; border: 1px solid #d7ff58; }
@@ -570,6 +574,18 @@
       .trl-details summary { cursor: pointer; color: #d7ff58; font-weight: 850; }
       .trl-details p { color: #c7ebe6; line-height: 1.55; font-size: .8rem; }
       .trl-details a { display: inline-block; padding: 9px 12px; border-radius: 9px; background: white; color: #07675f; font-weight: 850; font-size: .8rem; }
+      .trl-rule { margin: 14px 0 0; padding: 12px 14px; border-left: 4px solid #d7ff58; border-radius: 0 10px 10px 0; background: #002f3b70; color: #e8fffb; font-size: .8rem; line-height: 1.5; }
+      .trl-matrix { margin-top: 14px; overflow-x: auto; border-radius: 14px; border: 1px solid #ffffff2e; }
+      .trl-matrix table { width: 100%; border-collapse: collapse; min-width: 680px; background: #fffffffa; color: var(--ink); font-size: .78rem; }
+      .trl-matrix caption { padding: 13px 15px; text-align: left; background: #003f4b; color: white; font-weight: 850; }
+      .trl-matrix th, .trl-matrix td { padding: 11px 13px; text-align: left; vertical-align: top; border-bottom: 1px solid #dce9e7; }
+      .trl-matrix th { color: #315f5b; background: #edf8f6; font-size: .72rem; text-transform: uppercase; letter-spacing: .03em; }
+      .trl-matrix tr:last-child td { border-bottom: 0; }
+      .trl-state { display: inline-block; white-space: nowrap; padding: 5px 8px; border-radius: 999px; font-weight: 850; }
+      .trl-state.met { color: #075849; background: #c9f6e9; }
+      .trl-state.partial { color: #675200; background: #fff0a9; }
+      .trl-state.pending { color: #873737; background: #ffe0df; }
+      .trl-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 12px; }
       .trl-warning { margin-top: 14px; color: #c7ebe6; font-size: .75rem; line-height: 1.5; }
       @media (max-width: 700px) {
         .trl-hero { grid-template-columns: auto 1fr; }
@@ -1008,18 +1024,18 @@
           </div>
           <div class="trl">
             <div class="trl-hero">
-              <div class="trl-badge"><div><small>TRL</small><strong>4</strong></div></div>
+              <div class="trl-badge"><div><small>TRL</small><strong>1</strong></div></div>
               <div class="trl-title">
-                <strong>Protótipo funcional em validação controlada</strong>
-                <span>Nível atual estimado da plataforma Inov@Rede Saúde 360</span>
+                <strong>Princípios básicos e necessidade tecnológica identificados</strong>
+                <span>Nível atualmente comprovável da plataforma Inov@Rede Saúde 360</span>
               </div>
-              <span class="trl-validation">Estimativa técnica</span>
+              <span class="trl-validation">TRL 1 comprovado</span>
             </div>
             <div class="trl-scale" aria-label="Escala de maturidade tecnológica de 1 a 9">
-              <div class="trl-step done"><i></i><span>TRL 1</span></div>
-              <div class="trl-step done"><i></i><span>TRL 2</span></div>
-              <div class="trl-step done"><i></i><span>TRL 3</span></div>
-              <div class="trl-step current"><i></i><span>TRL 4</span></div>
+              <div class="trl-step current"><i></i><span>TRL 1</span></div>
+              <div class="trl-step next"><i></i><span>TRL 2</span></div>
+              <div class="trl-step"><i></i><span>TRL 3</span></div>
+              <div class="trl-step"><i></i><span>TRL 4</span></div>
               <div class="trl-step"><i></i><span>TRL 5</span></div>
               <div class="trl-step"><i></i><span>TRL 6</span></div>
               <div class="trl-step"><i></i><span>TRL 7</span></div>
@@ -1027,35 +1043,53 @@
               <div class="trl-step"><i></i><span>TRL 9</span></div>
             </div>
             <div class="trl-evidence-progress">
-              <div class="trl-evidence-head"><span>Evidências previstas para validação formal do TRL 4</span><strong>4 de 5 • 80%</strong></div>
-              <div class="trl-progress" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"><i></i></div>
+              <div class="trl-evidence-head"><span>Situação da comprovação do próximo nível</span><strong>TRL 2 em consolidação documental</strong></div>
+              <div class="trl-proof-status"><span class="available">Evidências técnicas disponíveis</span><span class="pending">Validação formal pendente</span></div>
             </div>
+            <p class="trl-rule"><strong>Regra de decisão:</strong> o nível somente avança quando todos os critérios do nível pretendido — e dos níveis anteriores — estiverem sustentados por evidências identificáveis. Protótipo publicado, isoladamente, não eleva o TRL.</p>
             <div class="trl-cards">
               <article class="trl-card">
-                <h3>Evidências já disponíveis</h3>
+                <h3>Evidências existentes para o TRL 2</h3>
                 <ul>
-                  <li>Plataforma funcional e publicada</li>
-                  <li>Integração com fontes públicas oficiais</li>
-                  <li>Filtros nacionais por estado e município</li>
-                  <li>Rotinas automáticas e histórico no GitHub</li>
+                  <li>Problema público e contexto de utilização definidos</li>
+                  <li>Gestores municipais e equipes da ESF identificados como usuários</li>
+                  <li>Conceito da plataforma e do dashboard formulado</li>
+                  <li>Fontes de dados e funcionalidades tecnológicas identificadas</li>
                 </ul>
               </article>
               <article class="trl-card next">
-                <h3>Próximo marco — TRL 5</h3>
+                <h3>Para comprovar formalmente o TRL 2</h3>
                 <ul>
-                  <li>Executar testes com gestores municipais</li>
-                  <li>Avaliar usabilidade e utilidade decisória</li>
-                  <li>Registrar falhas, ajustes e nova versão</li>
-                  <li>Emitir relatório e aceite da equipe responsável</li>
+                  <li>Consolidar o documento do conceito tecnológico</li>
+                  <li>Registrar arquitetura e fluxo das fontes de dados</li>
+                  <li>Organizar o README e o dossiê de evidências</li>
+                  <li>Obter análise e validação formal da equipe responsável</li>
                 </ul>
               </article>
             </div>
+            <div class="trl-matrix">
+              <table>
+                <caption>Matriz resumida de evidências — avaliação de 13/09/2026</caption>
+                <thead><tr><th>Nível</th><th>Critério</th><th>Situação</th><th>Evidência ou lacuna</th></tr></thead>
+                <tbody>
+                  <tr><td>TRL 1</td><td>Princípios básicos observados e registrados</td><td><span class="trl-state met">Atendido</span></td><td>Problema, objetivos e fundamentos do uso de dados públicos em saúde estão documentados no projeto.</td></tr>
+                  <tr><td>TRL 1</td><td>Aplicação potencial identificada</td><td><span class="trl-state met">Atendido</span></td><td>Uso definido para gestores municipais e equipes da ESF.</td></tr>
+                  <tr><td>TRL 2</td><td>Conceito e caso de uso formulados</td><td><span class="trl-state met">Atendido</span></td><td>Dashboard nacional, filtros territoriais e indicadores automáticos estão descritos e implementados no piloto.</td></tr>
+                  <tr><td>TRL 2</td><td>Viabilidade e benefício analisados</td><td><span class="trl-state partial">Parcial</span></td><td>Há arquitetura funcional e fontes definidas; falta nota técnica assinada com análise de viabilidade.</td></tr>
+                  <tr><td>TRL 2</td><td>Premissas, limites e riscos registrados</td><td><span class="trl-state partial">Parcial</span></td><td>Limites operacionais foram identificados; falta consolidá-los e validá-los formalmente.</td></tr>
+                  <tr><td>TRL 3</td><td>Prova analítica e experimental das funções críticas</td><td><span class="trl-state pending">Pendente</span></td><td>Exige protocolo, testes reproduzíveis, dados representativos, métricas e relatório de resultados.</td></tr>
+                </tbody>
+              </table>
+            </div>
             <details class="trl-details">
               <summary>Consultar evidências e critérios de validação</summary>
-              <p>O dossiê deverá reunir endereço e versão da plataforma, registros das atualizações, testes funcionais, atas, avaliações de usuários, relatório técnico e parecer da comissão de validação.</p>
-              <a href="https://github.com/jrodriguesteixeira-tech/inovarede-saude-360" target="_blank" rel="noopener">Ver código e histórico de versões</a>
+              <p>A avaliação adota uma leitura conservadora das escalas NASA para software e União Europeia, com evidências cumulativas. Repositórios públicos foram usados como referência de implementação para matriz, trilha de auditoria e classificação atendido/parcial/pendente.</p>
+              <div class="trl-actions">
+                <a href="https://github.com/jrodriguesteixeira-tech/inovarede-saude-360/blob/main/docs/trl-evidencias.md" target="_blank" rel="noopener">Abrir dossiê de evidências</a>
+                <a href="https://github.com/jrodriguesteixeira-tech/inovarede-saude-360/commits/main" target="_blank" rel="noopener">Ver histórico de versões</a>
+              </div>
             </details>
-            <p class="trl-warning">O TRL 4 é uma estimativa fundamentada nas evidências técnicas atuais. A atribuição definitiva deverá ser formalizada pela equipe ou comissão responsável pelo projeto.</p>
+            <p class="trl-warning">Situação atual: TRL 1 comprovado. O projeto possui evidências relevantes para o TRL 2, cuja atribuição depende da consolidação documental e da validação formal pela equipe ou comissão responsável.</p>
           </div>
         </section>
         <p class="foot">
