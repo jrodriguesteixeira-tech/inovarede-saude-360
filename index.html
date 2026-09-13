@@ -1,0 +1,786 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Inov@Rede Saúde 360 — UFLA</title>
+    <meta
+      name="description"
+      content="Mentoria integrada para governança humanizada, qualidade de gestão e excelência assistencial no SUS."
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23066b65'/%3E%3Cpath d='M11 34h10l5-13 9 27 7-15h11' fill='none' stroke='white' stroke-width='5'/%3E%3C/svg%3E"
+    />
+    <style>
+      :root {
+        --ink: #123532;
+        --muted: #687b78;
+        --green: #008c7a;
+        --dark: #063f57;
+        --mint: #d8f7ef;
+        --bg: #f4fbff;
+        --line: #d9e8e4;
+        --white: #fff;
+        --red: #c84d48;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font:
+          16px system-ui,
+          -apple-system,
+          sans-serif;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      .shell {
+        display: grid;
+        grid-template-columns: 230px 1fr;
+        min-height: 100vh;
+      }
+      aside {
+        background: var(--dark);
+        color: white;
+        padding: 27px 20px;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+      }
+      .brand {
+        font-weight: 800;
+        font-size: 1.15rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .mark {
+        width: 40px;
+        height: 40px;
+        background: #188279;
+        border-radius: 13px;
+        display: grid;
+        place-items: center;
+      }
+      .nav {
+        display: grid;
+        gap: 7px;
+        margin-top: 40px;
+      }
+      .nav a {
+        padding: 11px 12px;
+        color: #b9d1ce;
+        border-radius: 10px;
+        font-size: 0.87rem;
+      }
+      .nav a:first-child {
+        background: #194945;
+        color: white;
+      }
+      .aside-foot {
+        position: absolute;
+        bottom: 25px;
+        color: #8eaca8;
+        font-size: 0.77rem;
+        line-height: 1.5;
+      }
+      main {
+        max-width: 1400px;
+        width: 100%;
+        margin: auto;
+        padding: 32px 36px 50px;
+      }
+      .eyebrow {
+        color: var(--green);
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+      }
+      h1 {
+        font-size: clamp(2rem, 4vw, 3rem);
+        letter-spacing: -0.05em;
+        margin: 7px 0 9px;
+      }
+      .lead {
+        font-size: 1.05rem;
+        color: var(--muted);
+        max-width: 850px;
+        line-height: 1.6;
+      }
+      .hero {
+        background:
+          linear-gradient(90deg, rgba(3, 53, 75, 0.96) 0%, rgba(0, 112, 104, 0.82) 48%, rgba(0, 74, 91, 0.2) 100%),
+          url("equipe-saude-publica.png") center/cover;
+        color: white;
+        padding: 44px 32px;
+        border-radius: 22px;
+        margin: 25px 0;
+        display: grid;
+        grid-template-columns: 1.4fr 0.6fr;
+        gap: 30px;
+        box-shadow: 0 18px 44px rgba(14, 61, 58, 0.17);
+      }
+      .hero h2 {
+        margin: 0 0 10px;
+        font-size: 1.32rem;
+      }
+      .hero p {
+        margin: 0;
+        color: #d9efec;
+        line-height: 1.62;
+      }
+      .hero-meta {
+        border-left: 1px solid #4e8d86;
+        padding-left: 24px;
+        align-self: center;
+      }
+      .hero-meta small {
+        display: block;
+        color: #add6d1;
+      }
+      .hero-meta strong {
+        display: block;
+        margin: 4px 0 13px;
+      }
+      .visual-story {
+        margin-top: 18px;
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 12px;
+      }
+      .photo-card {
+        min-height: 270px;
+        border-radius: 18px;
+        overflow: hidden;
+        position: relative;
+        background: #08736b;
+      }
+      .photo-card img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+      .photo-copy { position: absolute; inset: auto 0 0; padding: 42px 19px 17px; color: white; background: linear-gradient(transparent, rgba(3, 39, 54, .9)); }
+      .photo-copy strong { display: block; font-size: .94rem; }
+      .photo-copy span { font-size: .76rem; color: #d8f2ee; }
+      .image-note { color: var(--muted); font-size: .72rem; margin: 8px 2px 0; }
+      .section {
+        margin-top: 31px;
+      }
+      .section-head h2 {
+        margin: 0 0 4px;
+        font-size: 1.25rem;
+      }
+      .section-head p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.87rem;
+      }
+      .axes {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 11px;
+        margin-top: 14px;
+      }
+      .axis,
+      .card,
+      .panel,
+      .outcome {
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 17px;
+      }
+      .axis {
+        min-height: 163px;
+      }
+      .num {
+        width: 31px;
+        height: 31px;
+        border-radius: 9px;
+        background: var(--mint);
+        color: var(--green);
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+      }
+      .axis h3 {
+        font-size: 0.88rem;
+        margin: 14px 0 7px;
+      }
+      .axis p,
+      .outcome span {
+        font-size: 0.77rem;
+        color: var(--muted);
+        line-height: 1.47;
+        margin: 0;
+      }
+      .status {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 14px 16px;
+        margin-top: 14px;
+      }
+      .status-left {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+      }
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #bf7823;
+        box-shadow: 0 0 0 5px #fff0da;
+      }
+      .dot.ok {
+        background: var(--green);
+        box-shadow: 0 0 0 5px var(--mint);
+      }
+      .dot.fail {
+        background: var(--red);
+        box-shadow: 0 0 0 5px #fde7e5;
+      }
+      .status small {
+        display: block;
+        color: var(--muted);
+      }
+      button {
+        font: inherit;
+      }
+      .sync {
+        background: white;
+        border: 1px solid #afd3cd;
+        color: var(--green);
+        border-radius: 9px;
+        padding: 8px 11px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .sync:disabled {
+        opacity: 0.5;
+      }
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-top: 12px;
+      }
+      .label {
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+      .value {
+        font-size: 1.65rem;
+        font-weight: 800;
+        margin: 10px 0 3px;
+        letter-spacing: -0.04em;
+      }
+      .meta {
+        font-size: 0.75rem;
+        color: var(--muted);
+      }
+      .data-grid {
+        display: grid;
+        grid-template-columns: 1.5fr 0.7fr;
+        gap: 13px;
+        margin-top: 13px;
+      }
+      .panel h3 {
+        margin: 0 0 4px;
+        font-size: 0.95rem;
+      }
+      .panel > p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.78rem;
+      }
+      .chart {
+        height: 245px;
+        margin: 25px 0 27px;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        align-items: end;
+        gap: 4%;
+        padding: 0 3%;
+      }
+      .bw {
+        flex: 1;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: end;
+        position: relative;
+      }
+      .bar {
+        width: min(40px, 80%);
+        min-height: 9px;
+        background: linear-gradient(#40b4a8, var(--green));
+        border-radius: 7px 7px 0 0;
+        position: relative;
+      }
+      .bar span {
+        position: absolute;
+        top: -21px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.65rem;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+      .year {
+        position: absolute;
+        bottom: -23px;
+        font-size: 0.7rem;
+        color: var(--muted);
+      }
+      .facts {
+        display: grid;
+        gap: 11px;
+        margin-top: 15px;
+      }
+      .fact small {
+        display: block;
+        color: var(--muted);
+        font-size: 0.7rem;
+      }
+      .fact strong {
+        font-size: 0.8rem;
+      }
+      .notice {
+        background: #edf8f5;
+        border: 1px solid #cbe7df;
+        border-radius: 11px;
+        padding: 12px;
+        margin-top: 15px;
+        font-size: 0.76rem;
+        line-height: 1.45;
+        color: #315c57;
+      }
+      .outcomes {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-top: 14px;
+      }
+      .outcome strong {
+        font-size: 0.86rem;
+        display: block;
+        margin-bottom: 6px;
+      }
+      .trl {
+        margin-top: 14px;
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 17px;
+        padding: 19px;
+      }
+      .trl-line {
+        display: grid;
+        grid-template-columns: repeat(9, 1fr);
+        gap: 5px;
+        margin-top: 15px;
+      }
+      .level {
+        height: 9px;
+        background: #dce8e5;
+        border-radius: 9px;
+      }
+      .level.on {
+        background: var(--green);
+      }
+      .trl-note {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 9px;
+        color: var(--muted);
+        font-size: 0.73rem;
+      }
+      .foot {
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.74rem;
+        margin-top: 27px;
+      }
+      @media (max-width: 1050px) {
+        .shell {
+          grid-template-columns: 72px 1fr;
+        }
+        aside {
+          padding: 24px 14px;
+        }
+        .brand span,
+        .nav,
+        .aside-foot {
+          display: none;
+        }
+        .axes {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .cards {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      @media (max-width: 700px) {
+        .shell {
+          display: block;
+        }
+        aside {
+          height: auto;
+          position: static;
+          padding: 12px 17px;
+        }
+        .brand span {
+          display: block;
+        }
+        main {
+          padding: 22px 15px;
+        }
+        .hero {
+          grid-template-columns: 1fr;
+          padding: 21px;
+        }
+        .hero-meta {
+          border: 0;
+          border-top: 1px solid #4e8d86;
+          padding: 15px 0 0;
+        }
+        .axes {
+          grid-template-columns: 1fr 1fr;
+        }
+        .data-grid,
+        .outcomes,
+        .visual-story {
+          grid-template-columns: 1fr;
+        }
+        .chart {
+          height: 210px;
+          padding: 0;
+          gap: 2%;
+        }
+      }
+      @media (max-width: 430px) {
+        .axes,
+        .cards {
+          grid-template-columns: 1fr;
+        }
+        .status {
+          align-items: flex-start;
+          gap: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <aside>
+        <div class="brand">
+          <div class="mark">⌁</div>
+          <span>Inov@Rede 360</span>
+        </div>
+        <nav class="nav">
+          <a href="#projeto">Projeto</a><a href="#eixos">Cinco eixos</a
+          ><a href="#dados">Dados automáticos</a
+          ><a href="#resultados">Resultados</a><a href="#trl">Maturidade</a>
+        </nav>
+        <div class="aside-foot">
+          Inovação pública em saúde<br />Universidade Federal de Lavras
+        </div>
+      </aside>
+      <main>
+        <header id="projeto">
+          <div class="eyebrow">Universidade Federal de Lavras • SUS</div>
+          <h1>Inov@Rede Saúde 360</h1>
+          <p class="lead">
+            Mentoria integrada para governança humanizada, qualidade de gestão e
+            excelência assistencial no SUS.
+          </p>
+        </header>
+        <section class="hero">
+          <div>
+            <h2>Transformação da gestão e do cuidado no território</h2>
+            <p>
+              Programa de mentoria para gestores municipais e equipes da
+              Estratégia Saúde da Família, articulando conhecimento técnico,
+              liderança humanizada, formação continuada, inovação digital e
+              governança baseada em dados.
+            </p>
+          </div>
+          <div class="hero-meta">
+            <small>Coordenação docente</small
+            ><strong>Vitor Luis Tenorio Mati</strong
+            ><small>Abrangência inicial</small
+            ><strong>Municípios da região da UFLA</strong><small>Cadastro</small
+            ><strong>26/11/2025</strong>
+          </div>
+        </section>
+        <section class="section" id="eixos">
+          <div class="section-head">
+            <h2>Cinco eixos operacionais</h2>
+            <p>
+              Uma abordagem integrada para fortalecer gestão, equipes e
+              resultados.
+            </p>
+          </div>
+          <div class="axes">
+            <article class="axis">
+              <div class="num">1</div>
+              <h3>Governança e políticas do SUS</h3>
+              <p>
+                Mentoria técnica para gestão, eficiência e tomada de decisão.
+              </p>
+            </article>
+            <article class="axis">
+              <div class="num">2</div>
+              <h3>Diálogo, propósito e cultura</h3>
+              <p>Ética, propósito, cooperação e bem-estar das equipes.</p>
+            </article>
+            <article class="axis">
+              <div class="num">3</div>
+              <h3>Formação e matriciamento</h3>
+              <p>Educação continuada e apoio para ampliar a resolutividade.</p>
+            </article>
+            <article class="axis">
+              <div class="num">4</div>
+              <h3>Inovação e telemonitoramento</h3>
+              <p>
+                Tecnologia aplicada ao acompanhamento e cuidado territorial.
+              </p>
+            </article>
+            <article class="axis">
+              <div class="num">5</div>
+              <h3>Avaliação e métricas</h3>
+              <p>Monitoramento de desempenho e excelência assistencial.</p>
+            </article>
+          </div>
+        </section>
+        <section class="visual-story" aria-label="Cenas ilustrativas do serviço público de saúde">
+          <article class="photo-card">
+            <img src="./equipe-saude-publica.png" alt="Equipe multiprofissional reunida em ambiente de atenção primária" />
+            <div class="photo-copy"><strong>Conhecimento compartilhado</strong><span>Mentoria, integração profissional e decisões orientadas por dados.</span></div>
+          </article>
+          <article class="photo-card">
+            <img src="./cuidado-territorial.png" alt="Profissional de saúde utilizando tecnologia durante visita territorial" />
+            <div class="photo-copy"><strong>Cuidado conectado ao território</strong><span>Tecnologia com proximidade, escuta e atenção humanizada.</span></div>
+          </article>
+        </section>
+        <p class="image-note">Imagens ilustrativas geradas para representar situações genéricas do serviço público de saúde; não retratam participantes reais do projeto.</p>
+        <section class="section" id="dados">
+          <div class="section-head">
+            <h2>Módulo automático inicial</h2>
+            <p>
+              Contexto demográfico de Lavras/MG obtido sem digitação e sem
+              valores simulados.
+            </p>
+          </div>
+          <div class="status">
+            <div class="status-left">
+              <i class="dot" id="dot"></i>
+              <div>
+                <strong id="status">Conectando ao IBGE</strong
+                ><small id="detail">Município 3138203</small>
+              </div>
+            </div>
+            <button class="sync" id="sync">↻ Atualizar</button>
+          </div>
+          <div class="cards">
+            <article class="card">
+              <div class="label">População estimada</div>
+              <div class="value" id="population">—</div>
+              <div class="meta" id="population-meta">Último período</div>
+            </article>
+            <article class="card">
+              <div class="label">Variação anual</div>
+              <div class="value" id="annual">—</div>
+              <div class="meta" id="annual-meta">Cálculo automático</div>
+            </article>
+            <article class="card">
+              <div class="label">Acréscimo anual</div>
+              <div class="value" id="increase">—</div>
+              <div class="meta" id="increase-meta">Cálculo automático</div>
+            </article>
+            <article class="card">
+              <div class="label">Crescimento da série</div>
+              <div class="value" id="growth">—</div>
+              <div class="meta" id="growth-meta">Cálculo automático</div>
+            </article>
+          </div>
+          <div class="data-grid">
+            <article class="panel">
+              <h3>Evolução da população</h3>
+              <p>Série montada com os períodos retornados pela API.</p>
+              <div class="chart" id="chart"></div>
+            </article>
+            <article class="panel">
+              <h3>Rastreabilidade</h3>
+              <p>Elementos para conferência.</p>
+              <div class="facts">
+                <div class="fact">
+                  <small>Fonte</small><strong>API SIDRA/IBGE</strong>
+                </div>
+                <div class="fact">
+                  <small>Agregado</small><strong>6579</strong>
+                </div>
+                <div class="fact">
+                  <small>Variável</small><strong>9324</strong>
+                </div>
+                <div class="fact">
+                  <small>Localidade</small><strong>Lavras/MG — 3138203</strong>
+                </div>
+              </div>
+              <div class="notice">
+                Somente dados obtidos ou calculados automaticamente. Nenhum
+                resultado do projeto foi inventado.
+              </div>
+            </article>
+          </div>
+        </section>
+        <section class="section" id="resultados">
+          <div class="section-head">
+            <h2>Resultados que serão monitorados</h2>
+            <p>
+              As linhas de base serão abertas quando a execução com os
+              municípios começar.
+            </p>
+          </div>
+          <div class="outcomes">
+            <article class="outcome">
+              <strong>Gestão e governança</strong
+              ><span
+                >Eficiência, uso de recursos e evolução dos planos de
+                ação.</span
+              >
+            </article>
+            <article class="outcome">
+              <strong>Cuidado e resolutividade</strong
+              ><span
+                >Adesão terapêutica, encaminhamentos, iatrogenia e resultados
+                assistenciais.</span
+              >
+            </article>
+            <article class="outcome">
+              <strong>Pessoas e experiência</strong
+              ><span
+                >Satisfação, bem-estar, cultura e propósito das equipes.</span
+              >
+            </article>
+          </div>
+        </section>
+        <section class="section" id="trl">
+          <div class="section-head">
+            <h2>Maturidade tecnológica — TRL</h2>
+            <p>
+              A evolução será registrada por evidências, sem atribuição
+              prematura de nível.
+            </p>
+          </div>
+          <div class="trl">
+            <strong>Referência de evolução da plataforma</strong>
+            <div class="trl-line">
+              <i class="level on"></i><i class="level on"></i
+              ><i class="level on"></i><i class="level"></i><i class="level"></i
+              ><i class="level"></i><i class="level"></i><i class="level"></i
+              ><i class="level"></i>
+            </div>
+            <div class="trl-note">
+              <span>TRL 1 — princípios</span
+              ><span>Prova de conceito em desenvolvimento</span
+              ><span>TRL 9 — operação</span>
+            </div>
+            <div class="notice">
+              O nível definitivo deverá ser validado pela equipe com base em
+              protótipos, testes com usuários, ambiente relevante e operação
+              real.
+            </div>
+          </div>
+        </section>
+        <p class="foot">
+          Inov@Rede Saúde 360 • UFLA • Plataforma piloto em desenvolvimento
+        </p>
+      </main>
+    </div>
+    <script>
+      let status = document.getElementById("status"),
+        detail = document.getElementById("detail"),
+        population = document.getElementById("population"),
+        chart = document.getElementById("chart"),
+        sync = document.getElementById("sync");
+    </script>
+    <script>
+      const API =
+        "https://servicodados.ibge.gov.br/api/v3/agregados/6579/periodos/-6/variaveis/9324?localidades=N6[3138203]";
+      const fmt = (n) => Number(n).toLocaleString("pt-BR"),
+        pct = (n) => (n >= 0 ? "+" : "") + n.toFixed(2).replace(".", ",") + "%";
+      async function load() {
+        const btn = document.getElementById("sync"),
+          dot = document.getElementById("dot");
+        btn.disabled = true;
+        dot.className = "dot";
+        document.getElementById("status").textContent =
+          "Consultando a fonte oficial";
+        try {
+          const res = await fetch(API, { cache: "no-store" });
+          if (!res.ok) throw Error();
+          const data = await res.json(),
+            serie = data?.[0]?.resultados?.[0]?.series?.[0]?.serie || {},
+            rows = Object.entries(serie)
+              .map(([year, value]) => ({ year, value: +value }))
+              .filter((x) => x.value > 0)
+              .sort((a, b) => +a.year - +b.year);
+          if (rows.length < 2) throw Error();
+          const first = rows[0],
+            previous = rows.at(-2),
+            latest = rows.at(-1),
+            annual = (latest.value / previous.value - 1) * 100,
+            increase = latest.value - previous.value,
+            growth = (latest.value / first.value - 1) * 100;
+          population.textContent = fmt(latest.value);
+          document.getElementById("population-meta").textContent =
+            "Estimativa " + latest.year;
+          document.getElementById("annual").textContent = pct(annual);
+          document.getElementById("annual-meta").textContent =
+            previous.year + " → " + latest.year;
+          document.getElementById("increase").textContent =
+            (increase >= 0 ? "+" : "") + fmt(increase);
+          document.getElementById("increase-meta").textContent =
+            "comparado a " + previous.year;
+          document.getElementById("growth").textContent = pct(growth);
+          document.getElementById("growth-meta").textContent =
+            first.year + " → " + latest.year;
+          const min = Math.min(...rows.map((r) => r.value)) * 0.97,
+            max = Math.max(...rows.map((r) => r.value));
+          chart.innerHTML = rows
+            .map(
+              (r) =>
+                `<div class="bw"><div class="bar" style="height:${Math.max(12, ((r.value - min) / (max - min)) * 88 + 12)}%"><span>${fmt(r.value)}</span></div><b class="year">${r.year}</b></div>`,
+            )
+            .join("");
+          dot.className = "dot ok";
+          status.textContent = "Dados oficiais atualizados";
+          detail.textContent =
+            rows.length + " períodos processados automaticamente";
+        } catch (e) {
+          dot.className = "dot fail";
+          status.textContent = "Fonte temporariamente indisponível";
+          detail.textContent =
+            "Nenhum valor foi estimado ou preenchido manualmente.";
+        } finally {
+          btn.disabled = false;
+        }
+      }
+      sync.onclick = load;
+      load();
+    </script>
+  </body>
+</html>
