@@ -256,6 +256,25 @@
         display: block;
         color: var(--muted);
       }
+      .filters {
+        display: grid;
+        grid-template-columns: minmax(180px, 0.75fr) minmax(240px, 1.25fr);
+        gap: 12px;
+        margin-top: 14px;
+        padding: 16px;
+        background: linear-gradient(135deg, #e8faf7, #eef8ff);
+        border: 1px solid #b9ddd7;
+        border-radius: 14px;
+      }
+      .filter-field { display: grid; gap: 7px; }
+      .filter-field label { color: var(--ink); font-size: 0.82rem; font-weight: 800; }
+      .filter-field select {
+        width: 100%; min-height: 44px; padding: 9px 38px 9px 12px;
+        border: 1px solid #90c6bd; border-radius: 10px; background: white;
+        color: var(--ink); font: inherit; cursor: pointer;
+      }
+      .filter-field select:focus { outline: 3px solid #84d8ca66; border-color: var(--green); }
+      .filter-field select:disabled { cursor: wait; opacity: 0.65; }
       button {
         font: inherit;
       }
@@ -479,6 +498,7 @@
           align-items: flex-start;
           gap: 10px;
         }
+        .filters { grid-template-columns: 1fr; }
       }
     </style>
   </head>
@@ -580,9 +600,23 @@
           <div class="section-head">
             <h2>Módulo automático inicial</h2>
             <p>
-              Contexto demográfico de Lavras/MG obtido sem digitação e sem
-              valores simulados.
+              Consulte automaticamente o contexto demográfico de estados e
+              municípios brasileiros, sem valores simulados.
             </p>
+          </div>
+          <div class="filters" aria-label="Filtros de localização">
+            <div class="filter-field">
+              <label for="state-select">Estado</label>
+              <select id="state-select" aria-label="Selecione o estado">
+                <option value="">Carregando estados…</option>
+              </select>
+            </div>
+            <div class="filter-field">
+              <label for="city-select">Município</label>
+              <select id="city-select" aria-label="Selecione o município" disabled>
+                <option value="">Carregando municípios…</option>
+              </select>
+            </div>
           </div>
           <div class="status">
             <div class="status-left">
@@ -636,7 +670,7 @@
                   <small>Variável</small><strong>9324</strong>
                 </div>
                 <div class="fact">
-                  <small>Localidade</small><strong>Lavras/MG — 3138203</strong>
+                  <small>Localidade</small><strong id="locality">Lavras/MG — 3138203</strong>
                 </div>
               </div>
               <div class="notice">
@@ -718,13 +752,60 @@
         sync = document.getElementById("sync");
     </script>
     <script>
-      const API =
-        "https://servicodados.ibge.gov.br/api/v3/agregados/6579/periodos/-6/variaveis/9324?localidades=N6[3138203]";
+      const DEFAULT_STATE = "31",
+        DEFAULT_CITY = "3138203",
+        stateSelect = document.getElementById("state-select"),
+        citySelect = document.getElementById("city-select"),
+        locality = document.getElementById("locality"),
+        LOCATIONS_API = "https://servicodados.ibge.gov.br/api/v1/localidades";
       const fmt = (n) => Number(n).toLocaleString("pt-BR"),
         pct = (n) => (n >= 0 ? "+" : "") + n.toFixed(2).replace(".", ",") + "%";
+      const selectedLocation = () => {
+        const stateOption = stateSelect.options[stateSelect.selectedIndex],
+          cityOption = citySelect.options[citySelect.selectedIndex],
+          isState = citySelect.value === "state";
+        return { level: isState ? "N3" : "N6", id: isState ? stateSelect.value : citySelect.value,
+          name: isState ? stateOption?.text : cityOption?.text, uf: stateOption?.dataset.sigla || "",
+          kind: isState ? "Estado" : "Município" };
+      };
+      async function loadStates() {
+        try {
+          const response = await fetch(LOCATIONS_API + "/estados?orderBy=nome", { cache: "force-cache" });
+          if (!response.ok) throw Error();
+          const states = await response.json();
+          stateSelect.innerHTML = states.map((state) =>
+            `<option value="${state.id}" data-sigla="${state.sigla}" ${String(state.id) === DEFAULT_STATE ? "selected" : ""}>${state.nome} (${state.sigla})</option>`).join("");
+          await loadCities(DEFAULT_CITY);
+        } catch (error) {
+          stateSelect.innerHTML = '<option value="31" data-sigla="MG">Minas Gerais (MG)</option>';
+          await loadCities(DEFAULT_CITY);
+        }
+      }
+      async function loadCities(preferredCity = "") {
+        const stateId = stateSelect.value,
+          stateName = stateSelect.options[stateSelect.selectedIndex]?.text || "Estado selecionado";
+        citySelect.disabled = true;
+        citySelect.innerHTML = '<option value="">Carregando municípios…</option>';
+        try {
+          const response = await fetch(`${LOCATIONS_API}/estados/${stateId}/municipios?orderBy=nome`, { cache: "force-cache" });
+          if (!response.ok) throw Error();
+          const cities = await response.json();
+          citySelect.innerHTML = `<option value="state">Todo o estado — ${stateName}</option>` + cities.map((city) =>
+            `<option value="${city.id}" ${String(city.id) === String(preferredCity) ? "selected" : ""}>${city.nome}</option>`).join("");
+          citySelect.disabled = false;
+          await load();
+        } catch (error) {
+          citySelect.innerHTML = '<option value="state">Todo o estado</option>';
+          citySelect.disabled = false;
+          await load();
+        }
+      }
       async function load() {
         const btn = document.getElementById("sync"),
-          dot = document.getElementById("dot");
+          dot = document.getElementById("dot"),
+          place = selectedLocation(),
+          API = `https://servicodados.ibge.gov.br/api/v3/agregados/6579/periodos/-6/variaveis/9324?localidades=${place.level}[${place.id}]`;
+        if (!place.id) return;
         btn.disabled = true;
         dot.className = "dot";
         document.getElementById("status").textContent =
@@ -769,7 +850,10 @@
           dot.className = "dot ok";
           status.textContent = "Dados oficiais atualizados";
           detail.textContent =
-            rows.length + " períodos processados automaticamente";
+            place.kind + " consultado • " + rows.length + " períodos processados";
+          locality.textContent = place.kind === "Estado"
+            ? `${place.name} — ${place.id}`
+            : `${place.name}/${place.uf} — ${place.id}`;
         } catch (e) {
           dot.className = "dot fail";
           status.textContent = "Fonte temporariamente indisponível";
@@ -780,7 +864,9 @@
         }
       }
       sync.onclick = load;
-      load();
+      stateSelect.onchange = () => loadCities();
+      citySelect.onchange = load;
+      loadStates();
     </script>
   </body>
 </html>
