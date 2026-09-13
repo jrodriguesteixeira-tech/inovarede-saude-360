@@ -1,9 +1,46 @@
 {
-  "status": "aguardando_primeira_atualizacao",
+  "status": "ok",
   "municipio": "Lavras",
   "uf": "MG",
   "codigo_ibge": "3138203",
-  "atualizado_em": null,
-  "indicadores": {},
-  "nota": "Aguardando a primeira execução automática."
+  "atualizado_em": "2026-09-13T01:51:20+00:00",
+  "indicadores": {
+    "internacoes": {
+      "valor": 407,
+      "competencia": "2026-06",
+      "status": "ok",
+      "nome": "Internações hospitalares",
+      "fonte": "SIH/SUS",
+      "unidade": "internações",
+      "criterio": "Município de residência"
+    },
+    "mortalidade": {
+      "valor": 774,
+      "competencia": "2023",
+      "status": "ok",
+      "nome": "Óbitos registrados",
+      "fonte": "SIM",
+      "unidade": "óbitos",
+      "criterio": "Município de residência"
+    },
+    "nascimentos": {
+      "valor": 1246,
+      "competencia": "2022",
+      "status": "ok",
+      "nome": "Nascidos vivos",
+      "fonte": "SINASC",
+      "unidade": "nascimentos",
+      "criterio": "Município de residência da mãe"
+    },
+    "ambulatorial": {
+      "valor": 0,
+      "competencia": "2026-05",
+      "status": "ok",
+      "nome": "Produção ambulatorial aprovada",
+      "fonte": "SIA/SUS",
+      "unidade": "procedimentos",
+      "criterio": "Município do estabelecimento"
+    }
+  },
+  "nota": "Dados preliminares sujeitos às revisões e competências disponibilizadas pelo DATASUS."
 }
