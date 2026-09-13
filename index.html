@@ -331,6 +331,57 @@
         background: #063f3c;
         font: inherit;
       }
+      .dashboard-spotlight {
+        margin-top: 22px;
+        padding: 22px;
+        border: 1px solid #9dd5cb;
+        border-radius: 18px;
+        background: linear-gradient(145deg, #ffffff, #e9faf7);
+        box-shadow: 0 16px 38px #075e5718;
+      }
+      .dashboard-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 18px;
+      }
+      .dashboard-top h2 { margin: 0 0 5px; font-size: 1.35rem; }
+      .dashboard-top p { margin: 0; color: var(--muted); }
+      .dashboard-control { display: grid; gap: 6px; min-width: 235px; font-size: 0.82rem; font-weight: 800; }
+      .dashboard-control select {
+        min-height: 44px;
+        padding: 8px 36px 8px 12px;
+        border: 2px solid #159b8b;
+        border-radius: 10px;
+        background: white;
+        color: var(--ink);
+        font: inherit;
+        cursor: pointer;
+      }
+      .dashboard-summary {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 11px;
+        margin-top: 17px;
+      }
+      .summary-card {
+        min-height: 108px;
+        padding: 15px;
+        border: 1px solid var(--line);
+        border-radius: 13px;
+        background: white;
+      }
+      .summary-card[hidden] { display: none; }
+      .summary-card small { display: block; color: var(--muted); }
+      .summary-card strong { display: block; margin-top: 10px; font-size: 1.28rem; }
+      .summary-card span { display: block; margin-top: 5px; color: var(--muted); font-size: 0.76rem; }
+      .dashboard-link {
+        display: inline-block;
+        margin-top: 14px;
+        color: var(--green);
+        font-weight: 800;
+        text-decoration: none;
+      }
       button {
         font: inherit;
       }
@@ -539,6 +590,7 @@
         .visual-story {
           grid-template-columns: 1fr;
         }
+        .dashboard-summary { grid-template-columns: 1fr 1fr; }
         .chart {
           height: 210px;
           padding: 0;
@@ -558,6 +610,9 @@
         .automation-head { display: grid; }
         .automation-metrics { grid-template-columns: 1fr; }
         .indicator-filters { grid-template-columns: 1fr; }
+        .dashboard-top { display: grid; }
+        .dashboard-control { min-width: 0; }
+        .dashboard-summary { grid-template-columns: 1fr; }
       }
     </style>
   </head>
@@ -569,8 +624,8 @@
           <span>Inov@Rede 360</span>
         </div>
         <nav class="nav">
-          <a href="#projeto">Projeto</a><a href="#eixos">Cinco eixos</a
-          ><a href="#dados">Dados automáticos</a
+          <a href="#projeto">Projeto</a><a href="#dashboard">Dashboard</a
+          ><a href="#eixos">Cinco eixos</a><a href="#dados">Dados detalhados</a
           ><a href="#resultados">Resultados</a><a href="#trl">Maturidade</a>
         </nav>
         <div class="aside-foot">
@@ -603,6 +658,45 @@
             ><strong>Municípios da região da UFLA</strong><small>Cadastro</small
             ><strong>26/11/2025</strong>
           </div>
+        </section>
+        <section class="dashboard-spotlight" id="dashboard">
+          <div class="dashboard-top">
+            <div>
+              <h2>Dashboard consolidado</h2>
+              <p>Visão rápida dos indicadores automáticos disponíveis no piloto.</p>
+            </div>
+            <label class="dashboard-control" for="dashboard-indicator-filter">
+              Filtrar por indicador
+              <select id="dashboard-indicator-filter">
+                <option value="all">Visão consolidada</option>
+                <option value="demografia">Demografia e população</option>
+                <option value="cnes">Estabelecimentos — CNES</option>
+              </select>
+            </label>
+          </div>
+          <div class="dashboard-summary">
+            <article class="summary-card" data-dashboard-indicator="demografia">
+              <small>População estimada</small>
+              <strong id="dashboard-population">Carregando…</strong>
+              <span id="dashboard-population-period">IBGE</span>
+            </article>
+            <article class="summary-card" data-dashboard-indicator="demografia">
+              <small>Localidade pesquisada</small>
+              <strong id="dashboard-locality">Lavras/MG</strong>
+              <span>Filtro disponível nos dados detalhados</span>
+            </article>
+            <article class="summary-card" data-dashboard-indicator="cnes">
+              <small>Estabelecimentos no CNES</small>
+              <strong id="dashboard-cnes">Carregando…</strong>
+              <span>Lavras/MG — cobertura piloto</span>
+            </article>
+            <article class="summary-card" data-dashboard-indicator="cnes">
+              <small>Competência CNES</small>
+              <strong id="dashboard-cnes-period">Carregando…</strong>
+              <span>Atualização mensal automática</span>
+            </article>
+          </div>
+          <a class="dashboard-link" href="#dados">Abrir filtros e gráficos detalhados →</a>
         </section>
         <section class="section" id="eixos">
           <div class="section-head">
@@ -922,6 +1016,8 @@
             increase = latest.value - previous.value,
             growth = (latest.value / first.value - 1) * 100;
           population.textContent = fmt(latest.value);
+          document.getElementById("dashboard-population").textContent = fmt(latest.value);
+          document.getElementById("dashboard-population-period").textContent = "Estimativa " + latest.year + " • IBGE";
           document.getElementById("population-meta").textContent =
             "Estimativa " + latest.year;
           document.getElementById("annual").textContent = pct(annual);
@@ -949,6 +1045,8 @@
           locality.textContent = place.kind === "Estado"
             ? `${place.name} — ${place.id}`
             : `${place.name}/${place.uf} — ${place.id}`;
+          document.getElementById("dashboard-locality").textContent =
+            place.kind === "Estado" ? place.name : `${place.name}/${place.uf}`;
         } catch (e) {
           dot.className = "dot fail";
           status.textContent = "Fonte temporariamente indisponível";
@@ -979,6 +1077,9 @@
           badge.textContent = "Atualização automática ativa";
           total.textContent = fmt(data.total_estabelecimentos);
           period.textContent = String(data.competencia || "—").replace("-", "/");
+          document.getElementById("dashboard-cnes").textContent = fmt(data.total_estabelecimentos);
+          document.getElementById("dashboard-cnes-period").textContent =
+            String(data.competencia || "—").replace("-", "/");
           const updated = data.atualizado_em
             ? new Date(data.atualizado_em).toLocaleString("pt-BR")
             : "não informado";
@@ -989,6 +1090,12 @@
         }
       }
       loadCnesPilot();
+      document.getElementById("dashboard-indicator-filter").onchange = (event) => {
+        const selected = event.target.value;
+        document.querySelectorAll("[data-dashboard-indicator]").forEach((card) => {
+          card.hidden = selected !== "all" && card.dataset.dashboardIndicator !== selected;
+        });
+      };
     </script>
   </body>
 </html>
