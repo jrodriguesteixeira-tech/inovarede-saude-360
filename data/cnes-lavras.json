@@ -1,13 +1,114 @@
 {
-  "status": "aguardando_primeira_atualizacao",
+  "status": "ok",
   "fonte": "CNES/DATASUS via PySUS",
   "municipio": "Lavras",
   "uf": "MG",
   "codigo_ibge": "3138203",
-  "competencia": null,
-  "atualizado_em": null,
-  "total_estabelecimentos": null,
+  "competencia": "2026-07",
+  "atualizado_em": "2026-09-13T01:30:37+00:00",
+  "total_estabelecimentos": 727,
   "gestao": {},
-  "amostra_estabelecimentos": [],
-  "observacao": "A rotina automática será executada pelo GitHub Actions."
+  "amostra_estabelecimentos": [
+    {
+      "cnes": "0029289",
+      "nome": "Estabelecimento sem nome",
+      "tipo": "22"
+    },
+    {
+      "cnes": "0081884",
+      "nome": "Estabelecimento sem nome",
+      "tipo": "22"
+    },
+    {
+      "cnes": "0102067",
+      "nome": "Estabelecimento sem nome",
+      "tipo": "62"
+    },
+    {
+      "cnes": "0144908",
+      "nome": "Estabelecimento sem nome",
+      "tipo": "39"
+    },
+    {
+      "cnes": "0145610",
+      "nome": "Estabelecimento sem nome",
+      "tipo": "39"
+    },
+    {
+      "cnes": "0226548",
+      "nome": "Estabelecimento sem nome",
+      "tipo": "22"
+    },
+    {
+      "cnes": "0259683",
+      "nome": "Estabelecimento sem nome",
+      "tipo": "39"
+    },
+    {
+      "cnes": "0270237",
+      "nome": "Estabelecimento sem nome",
+      "tipo": "39"
+    },
+    {
+      "cnes": "0278505",
+      "nome": "Estabelecimento sem nome",
+      "tipo": "22"
+    },
+    {
+      "cnes": "0281166",
+      "nome": "Estabelecimento sem nome",
+      "tipo": "39"
+    },
+    {
+      "cnes": "0303569",
+      "nome": "Estabelecimento sem nome",
+      "tipo": "39"
+    },
+    {
+      "cnes": "0373842",
+      "nome": "Estabelecimento sem nome",
+      "tipo": "39"
+    },
+    {
+      "cnes": "0383449",
+      "nome": "Estabelecimento sem nome",
+      "tipo": "39"
+    },
+    {
+      "cnes": "0503150",
+      "nome": "Estabelecimento sem nome",
+      "tipo": "43"
+    },
+    {
+      "cnes": "0509264",
+      "nome": "Estabelecimento sem nome",
+      "tipo": "39"
+    },
+    {
+      "cnes": "0606014",
+      "nome": "Estabelecimento sem nome",
+      "tipo": "39"
+    },
+    {
+      "cnes": "0611158",
+      "nome": "Estabelecimento sem nome",
+      "tipo": "39"
+    },
+    {
+      "cnes": "0620890",
+      "nome": "Estabelecimento sem nome",
+      "tipo": "39"
+    },
+    {
+      "cnes": "0674958",
+      "nome": "Estabelecimento sem nome",
+      "tipo": "22"
+    },
+    {
+      "cnes": "0680478",
+      "nome": "Estabelecimento sem nome",
+      "tipo": "39"
+    }
+  ],
+  "observacao": "Contagem piloto baseada no arquivo de estabelecimentos (grupo ST) do CNES."
 }
