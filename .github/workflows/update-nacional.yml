@@ -49,4 +49,5 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           git add data/estados
           git diff --cached --quiet || git commit -m "Atualiza indicadores nacionais do SUS"
+          git pull --rebase origin main
           git push

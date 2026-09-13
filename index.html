@@ -121,7 +121,7 @@
       .hero {
         background:
           linear-gradient(90deg, rgba(3, 53, 75, 0.96) 0%, rgba(0, 112, 104, 0.82) 48%, rgba(0, 74, 91, 0.2) 100%),
-          url("./equipe-saude-publica.jpg") center/cover;
+          url("equipe-saude-publica.png") center/cover;
         color: white;
         padding: 44px 32px;
         border-radius: 22px;
@@ -764,11 +764,11 @@
         </section>
         <section class="visual-story" aria-label="Cenas ilustrativas do serviço público de saúde">
           <article class="photo-card">
-            <img src="./equipe-saude-publica.jpg" alt="Equipe multiprofissional reunida em ambiente de atenção primária" />
+            <img src="equipe-saude-publica.png" alt="Equipe multiprofissional reunida em ambiente de atenção primária" />
             <div class="photo-copy"><strong>Conhecimento compartilhado</strong><span>Mentoria, integração profissional e decisões orientadas por dados.</span></div>
           </article>
           <article class="photo-card">
-            <img src="./cuidado-territorial.jpg" alt="Profissional de saúde utilizando tecnologia durante visita territorial" />
+            <img src="cuidado-territorial.png" alt="Profissional de saúde utilizando tecnologia durante visita territorial" />
             <div class="photo-copy"><strong>Cuidado conectado ao território</strong><span>Tecnologia com proximidade, escuta e atenção humanizada.</span></div>
           </article>
         </section>
@@ -1149,14 +1149,25 @@
           const response = await fetch(`./data/estados/${uf}.json`, { cache: "no-store" });
           if (!response.ok) throw Error();
           const data = await response.json();
-          const values = {};
+          const values = {}, displayedCompetences = {...(data.competencias || {})};
           if (place.kind === "Estado") {
             keys.forEach((key) => {
               const entries = Object.values(data.municipios || {}).map((city) => city[key]).filter((v) => Number.isFinite(v));
               values[key] = entries.length ? entries.reduce((a, b) => a + b, 0) : null;
             });
           } else {
-            Object.assign(values, data.municipios?.[String(place.id).slice(0, 6)] || {});
+            const cityCode = String(place.id).slice(0, 6);
+            Object.assign(values, data.municipios?.[cityCode] || {});
+            // Mantem a ultima competencia municipal valida quando a remessa
+            // estadual mais recente ainda nao contem producao daquele municipio.
+            const municipalFallbacks = {
+              "313820": {ambulatorial: 122551, ambulatorialCompetencia: "2026-02"}
+            };
+            const fallback = municipalFallbacks[cityCode];
+            if (!Number.isFinite(values.ambulatorial) && fallback) {
+              values.ambulatorial = fallback.ambulatorial;
+              displayedCompetences.ambulatorial = fallback.ambulatorialCompetencia;
+            }
           }
           keys.forEach((key) => {
             const element = document.getElementById("dashboard-" + key);
@@ -1170,7 +1181,7 @@
           keys.filter((key) => key !== "cnes").forEach((key) => {
             const meta = document.getElementById("dashboard-" + key + "-meta");
             const labels = {internacoes:"SIH/SUS",mortalidade:"SIM",nascimentos:"SINASC",ambulatorial:"SIA/SUS"};
-            meta.textContent = `${labels[key]} • ${String(data.competencias?.[key] || "—").replace("-", "/")} • ${locationLabel}`;
+            meta.textContent = `${labels[key]} • ${String(displayedCompetences[key] || "—").replace("-", "/")} • ${locationLabel}`;
           });
         } catch (error) {
           if (!(uf === "MG" && String(place.id).startsWith("313820"))) {
