@@ -81,6 +81,8 @@ def monthly_indicator(fetcher, group, city_columns, value_column=None):
                 )
             )
             filtered = city_rows(frame, city_columns)
+            if filtered.empty:
+                raise RuntimeError("Competência sem registros do município.")
             if value_column:
                 column = find_column(filtered, [value_column])
                 value = pd.to_numeric(filtered[column], errors="coerce").fillna(0).sum()
@@ -106,6 +108,8 @@ def annual_indicator(fetcher, group, city_columns):
                 )
             )
             filtered = city_rows(frame, city_columns)
+            if filtered.empty:
+                raise RuntimeError("Ano sem registros do município.")
             return {"valor": int(len(filtered)), "competencia": str(year), "status": "ok"}
         except Exception as exc:
             errors.append(str(exc))
