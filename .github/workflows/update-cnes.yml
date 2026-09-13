@@ -27,8 +27,9 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
+          cache-dependency-path: automation/requirements.txt
       - name: Instalar PySUS
-        run: pip install "pysus==2.11.2"
+        run: pip install -r automation/requirements.txt
       - name: Consultar CNES e gerar resumo
         run: python automation/update_cnes.py
       - name: Salvar resultado
