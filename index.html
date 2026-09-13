@@ -859,7 +859,7 @@
           <article class="automation-panel" aria-labelledby="cnes-title">
             <div class="automation-head">
               <div>
-                <h3 id="cnes-title">Piloto automático CNES — Lavras/MG</h3>
+                <h3 id="cnes-title">CNES — localidade selecionada</h3>
                 <p>Cadastro de estabelecimentos de saúde atualizado mensalmente com dados públicos do DATASUS.</p>
               </div>
               <span class="automation-badge" id="cnes-badge">Preparando</span>
@@ -867,7 +867,7 @@
             <div class="indicator-filters" aria-label="Filtros do indicador CNES">
               <label>Localidade
                 <select aria-label="Localidade do CNES" disabled>
-                  <option>Lavras/MG — cobertura piloto</option>
+                  <option id="cnes-location-option">Lavras/MG</option>
                 </select>
               </label>
               <label>Competência
@@ -1071,6 +1071,7 @@
             : `${place.name}/${place.uf} — ${place.id}`;
           document.getElementById("dashboard-locality").textContent =
             place.kind === "Estado" ? place.name : `${place.name}/${place.uf}`;
+          loadNationalHealth(place);
         } catch (e) {
           dot.className = "dot fail";
           status.textContent = "Fonte temporariamente indisponível";
@@ -1139,6 +1140,47 @@
         }
       }
       loadHealthIndicators();
+      async function loadNationalHealth(place) {
+        const keys = ["cnes", "internacoes", "mortalidade", "nascimentos", "ambulatorial"],
+          uf = place.uf || stateSelect.options[stateSelect.selectedIndex]?.dataset.sigla,
+          locationLabel = place.kind === "Estado" ? place.name : `${place.name}/${uf}`;
+        document.getElementById("cnes-location-option").textContent = locationLabel;
+        try {
+          const response = await fetch(`./data/estados/${uf}.json`, { cache: "no-store" });
+          if (!response.ok) throw Error();
+          const data = await response.json();
+          const values = {};
+          if (place.kind === "Estado") {
+            keys.forEach((key) => {
+              const entries = Object.values(data.municipios || {}).map((city) => city[key]).filter((v) => Number.isFinite(v));
+              values[key] = entries.length ? entries.reduce((a, b) => a + b, 0) : null;
+            });
+          } else {
+            Object.assign(values, data.municipios?.[String(place.id).slice(0, 6)] || {});
+          }
+          keys.forEach((key) => {
+            const element = document.getElementById("dashboard-" + key);
+            if (element) element.textContent = Number.isFinite(values[key]) ? fmt(values[key]) : "Indisponível";
+          });
+          document.getElementById("cnes-total").textContent =
+            Number.isFinite(values.cnes) ? fmt(values.cnes) : "Indisponível";
+          document.getElementById("cnes-period").textContent =
+            String(data.competencias?.cnes || "—").replace("-", "/");
+          document.getElementById("cnes-badge").textContent = "Atualização nacional ativa";
+          keys.filter((key) => key !== "cnes").forEach((key) => {
+            const meta = document.getElementById("dashboard-" + key + "-meta");
+            const labels = {internacoes:"SIH/SUS",mortalidade:"SIM",nascimentos:"SINASC",ambulatorial:"SIA/SUS"};
+            meta.textContent = `${labels[key]} • ${String(data.competencias?.[key] || "—").replace("-", "/")} • ${locationLabel}`;
+          });
+        } catch (error) {
+          if (!(uf === "MG" && String(place.id).startsWith("313820"))) {
+            keys.forEach((key) => {
+              const element = document.getElementById("dashboard-" + key);
+              if (element) element.textContent = "Processando";
+            });
+          }
+        }
+      }
       document.getElementById("dashboard-indicator-filter").onchange = (event) => {
         const selected = event.target.value;
         document.querySelectorAll("[data-dashboard-indicator]").forEach((card) => {

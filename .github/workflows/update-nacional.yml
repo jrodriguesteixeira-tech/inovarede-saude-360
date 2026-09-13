@@ -1,0 +1,52 @@
+name: Atualizar indicadores nacionais do SUS
+on:
+  schedule:
+    - cron: "15 9 5 * *"
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+    paths: ["automation/update_estado.py", ".github/workflows/update-nacional.yml"]
+permissions:
+  contents: write
+concurrency:
+  group: indicadores-nacionais
+  cancel-in-progress: false
+jobs:
+  coletar:
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        state: [AC, AL, AP, AM, BA, CE, DF, ES, GO, MA, MT, MS, MG, PA, PB, PR, PE, PI, RJ, RN, RS, RO, RR, SC, SP, SE, TO]
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: automation/requirements.txt
+      - run: pip install -r automation/requirements.txt
+      - run: python automation/update_estado.py --state "${{ matrix.state }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: estado-${{ matrix.state }}
+          path: generated/${{ matrix.state }}.json
+  publicar:
+    needs: coletar
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: estado-*
+          path: data/estados
+          merge-multiple: true
+      - run: |
+          git config user.name "inovarede-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/estados
+          git diff --cached --quiet || git commit -m "Atualiza indicadores nacionais do SUS"
+          git push
