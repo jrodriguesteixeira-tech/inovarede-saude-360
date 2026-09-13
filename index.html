@@ -593,6 +593,28 @@
         .trl-cards { grid-template-columns: 1fr; }
         .trl-step span { font-size: .58rem; }
       }
+
+      .diagnostic-panel { margin-top: 26px; border-radius: 24px; padding: 28px; color: #fff; background: linear-gradient(135deg,#073f57 0%,#007f76 58%,#00a68f 100%); box-shadow: 0 18px 42px rgba(6,63,87,.18); }
+      .diagnostic-head { display:flex; justify-content:space-between; align-items:end; gap:20px; margin-bottom:18px; }
+      .diagnostic-head h2 { margin:0 0 6px; font-size:clamp(1.55rem,3vw,2.3rem); }
+      .diagnostic-head p { margin:0; color:#d7f5f0; }
+      .diagnostic-select { min-width:260px; }
+      .diagnostic-select label { display:block; font-size:.78rem; font-weight:800; margin-bottom:6px; }
+      .diagnostic-select select { width:100%; border:2px solid #65e6d3; border-radius:12px; padding:11px 12px; background:#fff; color:var(--ink); font-weight:700; }
+      .diagnostic-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+      .diagnostic-card { --accent:#54dfca; min-height:170px; display:flex; flex-direction:column; justify-content:space-between; padding:18px; border-radius:18px; background:rgba(255,255,255,.96); color:var(--ink); border-top:6px solid var(--accent); }
+      .diagnostic-card.context { --accent:#f17678; } .diagnostic-card.care { --accent:#55d8c5; } .diagnostic-card.outcome { --accent:#76a7e2; }
+      .diagnostic-card small { color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
+      .diagnostic-card strong { display:block; margin:9px 0 4px; font-size:clamp(1.55rem,3vw,2.15rem); line-height:1; }
+      .diagnostic-card p { margin:0; color:var(--muted); font-size:.78rem; line-height:1.45; }
+      .diagnostic-note { margin:14px 0 0; padding:12px 14px; border:1px solid rgba(255,255,255,.25); border-radius:12px; color:#ddf7f3; font-size:.78rem; line-height:1.5; }
+      .indicator-roadmap { margin-top:16px; background:#fff; color:var(--ink); border-radius:18px; padding:20px; }
+      .indicator-roadmap h3 { margin:0 0 4px; } .indicator-roadmap > p { margin:0 0 14px; color:var(--muted); font-size:.85rem; }
+      .roadmap-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+      .roadmap-item { padding:13px; border:1px solid var(--line); border-radius:12px; background:#f7fbfa; }
+      .roadmap-item b { display:block; font-size:.84rem; margin-bottom:5px; } .roadmap-item span { color:var(--muted); font-size:.72rem; line-height:1.4; }
+      @media (max-width:900px) { .diagnostic-grid,.roadmap-grid{grid-template-columns:repeat(2,1fr)} .diagnostic-head{align-items:stretch;flex-direction:column}.diagnostic-select{min-width:0;width:100%} }
+      @media (max-width:600px) { .diagnostic-panel{padding:18px}.diagnostic-grid,.roadmap-grid{grid-template-columns:1fr} }
       .foot {
         text-align: center;
         color: var(--muted);
@@ -686,7 +708,7 @@
           <span>Inov@Rede 360</span>
         </div>
         <nav class="nav">
-          <a href="#projeto">Projeto</a><a href="#dashboard">Dashboard</a><a href="#metas">Metas automáticas</a
+          <a href="#projeto">Projeto</a><a href="#dashboard">Dashboard</a><a href="#metas">Metas automáticas</a><a href="#diagnostico">Diagnóstico ampliado</a
           ><a href="#eixos">Cinco eixos</a><a href="#dados">Dados detalhados</a
           ><a href="#resultados">Resultados</a><a href="#trl">Maturidade</a>
         </nav>
@@ -983,6 +1005,49 @@
             <p class="automation-note" id="cnes-note">Aguardando a primeira execução automática pelo GitHub.</p>
           </article>
         </section>
+
+        <section class="diagnostic-panel" id="diagnostico" aria-labelledby="diagnostico-title">
+          <div class="diagnostic-head">
+            <div>
+              <h2 id="diagnostico-title">Diagnóstico municipal ampliado</h2>
+              <p>Indicadores comparáveis calculados automaticamente para a localidade selecionada.</p>
+            </div>
+            <div class="diagnostic-select">
+              <label for="diagnostic-filter">Filtrar grupo de indicadores</label>
+              <select id="diagnostic-filter">
+                <option value="all">Todos os grupos</option>
+                <option value="context">Contexto e estrutura</option>
+                <option value="care">Utilização dos serviços</option>
+                <option value="outcome">Resultados demográficos</option>
+              </select>
+            </div>
+          </div>
+          <div class="diagnostic-grid" aria-live="polite">
+            <article class="diagnostic-card context" data-diagnostic="context"><div><small>Contexto e estrutura</small><strong id="diag-cnes-rate">—</strong><p>Estabelecimentos registrados no CNES por 10 mil habitantes.</p></div><p id="diag-cnes-rate-meta">Aguardando os dados oficiais.</p></article>
+            <article class="diagnostic-card care" data-diagnostic="care"><div><small>Utilização hospitalar</small><strong id="diag-hospital-rate">—</strong><p>Internações do SIH/SUS por 100 mil habitantes.</p></div><p id="diag-hospital-rate-meta">Aguardando os dados oficiais.</p></article>
+            <article class="diagnostic-card outcome" data-diagnostic="outcome"><div><small>Mortalidade geral</small><strong id="diag-mortality-rate">—</strong><p>Óbitos registrados no SIM por 100 mil habitantes.</p></div><p id="diag-mortality-rate-meta">Aguardando os dados oficiais.</p></article>
+            <article class="diagnostic-card outcome" data-diagnostic="outcome"><div><small>Natalidade</small><strong id="diag-birth-rate">—</strong><p>Nascidos vivos registrados no SINASC por mil habitantes.</p></div><p id="diag-birth-rate-meta">Aguardando os dados oficiais.</p></article>
+            <article class="diagnostic-card care" data-diagnostic="care"><div><small>Produção ambulatorial</small><strong id="diag-ambulatory-rate">—</strong><p>Procedimentos aprovados no SIA/SUS por habitante.</p></div><p id="diag-ambulatory-rate-meta">Aguardando os dados oficiais.</p></article>
+            <article class="diagnostic-card care" data-diagnostic="care"><div><small>Relação produção–estrutura</small><strong id="diag-productivity-rate">—</strong><p>Procedimentos ambulatoriais por estabelecimento registrado.</p></div><p id="diag-productivity-rate-meta">Aguardando os dados oficiais.</p></article>
+          </div>
+          <p class="diagnostic-note"><b>Leitura responsável:</b> cada sistema possui competência própria. As taxas são calculadas pelo painel com dados oficiais disponíveis e população do IBGE; servem ao diagnóstico e não substituem metas pactuadas ou análise epidemiológica.</p>
+          <div class="indicator-roadmap">
+            <h3>Próximos indicadores automáticos em validação</h3>
+            <p>O painel só exibirá valores após validar definição, numerador, denominador, período e fonte.</p>
+            <div class="roadmap-grid">
+              <div class="roadmap-item"><b>Cobertura da Estratégia Saúde da Família</b><span>e-Gestor AB/SISAB • integração em estudo</span></div>
+              <div class="roadmap-item"><b>Mortalidade infantil</b><span>SIM + SINASC • cálculo e consistência pendentes</span></div>
+              <div class="roadmap-item"><b>Mortalidade prematura por DCNT</b><span>SIM • seleção CID-10 e faixa etária a validar</span></div>
+              <div class="roadmap-item"><b>Pré-natal com sete ou mais consultas</b><span>SINASC • regra de cálculo a validar</span></div>
+              <div class="roadmap-item"><b>Internações sensíveis à APS</b><span>SIH/SUS • lista brasileira de condições a validar</span></div>
+              <div class="roadmap-item"><b>Internações por diabetes e hipertensão</b><span>SIH/SUS • filtros CID-10 a validar</span></div>
+              <div class="roadmap-item"><b>Mortalidade cardiovascular</b><span>SIM • agrupamento CID-10 a validar</span></div>
+              <div class="roadmap-item"><b>Mortalidade por cânceres prioritários</b><span>SIM • sexo, localização e população de referência</span></div>
+              <div class="roadmap-item"><b>Indicadores de obesidade e saúde mental</b><span>SISVAN/SISAB • cobertura e comparabilidade em avaliação</span></div>
+            </div>
+          </div>
+        </section>
+
         <section class="section" id="resultados">
           <div class="section-head">
             <h2>Resultados que serão monitorados</h2>
@@ -1184,6 +1249,8 @@
             annual = (latest.value / previous.value - 1) * 100,
             increase = latest.value - previous.value,
             growth = (latest.value / first.value - 1) * 100;
+          window.currentPopulation = latest.value;
+          window.currentPopulationPeriod = latest.year;
           population.textContent = fmt(latest.value);
           document.getElementById("dashboard-population").textContent = fmt(latest.value);
           document.getElementById("dashboard-population-period").textContent = "Estimativa " + latest.year + " • IBGE";
@@ -1320,6 +1387,9 @@
             const element = document.getElementById("dashboard-" + key);
             if (element) element.textContent = Number.isFinite(values[key]) ? fmt(values[key]) : "Indisponível";
           });
+          window.currentHealthValues = values;
+          window.currentHealthCompetences = displayedCompetences;
+          renderExpandedIndicators(values, place, displayedCompetences);
           const currentAmb = values.ambulatorial,
             cityCodeForGoal = place.kind === "Estado" ? null : String(place.id).slice(0, 6),
             previousAmb = cityCodeForGoal ? data.anterior?.municipios?.[cityCodeForGoal]?.ambulatorial : null,
@@ -1368,6 +1438,36 @@
           }
         }
       }
+
+      function diagnosticNumber(value, digits = 1) {
+        return Number.isFinite(value)
+          ? value.toLocaleString("pt-BR", { minimumFractionDigits: digits, maximumFractionDigits: digits })
+          : "Indisponível";
+      }
+      function renderExpandedIndicators(values, place, competences) {
+        const pop = Number(window.currentPopulation);
+        const label = place.kind === "Estado" ? place.name : `${place.name}/${place.uf}`;
+        const set = (id, value, unit, source, period, digits = 1) => {
+          const valueEl = document.getElementById(id);
+          const metaEl = document.getElementById(id + "-meta");
+          if (!valueEl || !metaEl) return;
+          valueEl.textContent = diagnosticNumber(value, digits) + (Number.isFinite(value) ? " " + unit : "");
+          metaEl.textContent = `${source} • ${String(period || "competência não informada").replace("-", "/")} • ${label}`;
+        };
+        if (!Number.isFinite(pop) || pop <= 0) return;
+        set("diag-cnes-rate", Number.isFinite(values.cnes) ? values.cnes / pop * 10000 : NaN, "por 10 mil", "CNES", competences.cnes);
+        set("diag-hospital-rate", Number.isFinite(values.internacoes) ? values.internacoes / pop * 100000 : NaN, "por 100 mil", "SIH/SUS", competences.internacoes);
+        set("diag-mortality-rate", Number.isFinite(values.mortalidade) ? values.mortalidade / pop * 100000 : NaN, "por 100 mil", "SIM", competences.mortalidade);
+        set("diag-birth-rate", Number.isFinite(values.nascimentos) ? values.nascimentos / pop * 1000 : NaN, "por mil", "SINASC", competences.nascimentos);
+        set("diag-ambulatory-rate", Number.isFinite(values.ambulatorial) ? values.ambulatorial / pop : NaN, "por hab.", "SIA/SUS", competences.ambulatorial, 2);
+        set("diag-productivity-rate", Number.isFinite(values.ambulatorial) && Number.isFinite(values.cnes) && values.cnes > 0 ? values.ambulatorial / values.cnes : NaN, "por estab.", "SIA/SUS + CNES", competences.ambulatorial, 1);
+      }
+      document.getElementById("diagnostic-filter").onchange = (event) => {
+        document.querySelectorAll("[data-diagnostic]").forEach((card) => {
+          card.hidden = event.target.value !== "all" && card.dataset.diagnostic !== event.target.value;
+        });
+      };
+
       document.getElementById("dashboard-indicator-filter").onchange = (event) => {
         const selected = event.target.value;
         document.querySelectorAll("[data-dashboard-indicator]").forEach((card) => {
