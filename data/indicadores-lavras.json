@@ -3,7 +3,7 @@
   "municipio": "Lavras",
   "uf": "MG",
   "codigo_ibge": "3138203",
-  "atualizado_em": "2026-09-13T01:51:20+00:00",
+  "atualizado_em": "2026-09-13T01:55:33+00:00",
   "indicadores": {
     "internacoes": {
       "valor": 407,
@@ -33,8 +33,8 @@
       "criterio": "Município de residência da mãe"
     },
     "ambulatorial": {
-      "valor": 0,
-      "competencia": "2026-05",
+      "valor": 122551,
+      "competencia": "2026-02",
       "status": "ok",
       "nome": "Produção ambulatorial aprovada",
       "fonte": "SIA/SUS",
