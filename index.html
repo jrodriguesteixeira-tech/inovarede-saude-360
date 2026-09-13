@@ -275,6 +275,62 @@
       }
       .filter-field select:focus { outline: 3px solid #84d8ca66; border-color: var(--green); }
       .filter-field select:disabled { cursor: wait; opacity: 0.65; }
+      .automation-panel {
+        margin-top: 18px;
+        padding: 20px;
+        border-radius: 16px;
+        color: white;
+        background: linear-gradient(135deg, #063f3c, #087c70);
+        box-shadow: 0 14px 30px #075e5724;
+      }
+      .automation-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 18px;
+      }
+      .automation-head h3 { margin: 0 0 6px; font-size: 1.12rem; }
+      .automation-head p { margin: 0; color: #d5f7f1; line-height: 1.5; }
+      .automation-badge {
+        flex: 0 0 auto;
+        padding: 7px 10px;
+        border-radius: 999px;
+        background: #d7ff58;
+        color: #173e38;
+        font-weight: 800;
+        font-size: 0.78rem;
+      }
+      .automation-metrics {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-top: 18px;
+      }
+      .automation-metric {
+        padding: 14px;
+        border: 1px solid #ffffff3b;
+        border-radius: 12px;
+        background: #ffffff12;
+      }
+      .automation-metric small { display: block; color: #c8ebe6; }
+      .automation-metric strong { display: block; margin-top: 7px; font-size: 1.15rem; }
+      .automation-note { margin: 13px 0 0; color: #c8ebe6; font-size: 0.82rem; }
+      .indicator-filters {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 16px;
+      }
+      .indicator-filters label { display: grid; gap: 6px; color: #d5f7f1; font-size: 0.8rem; font-weight: 700; }
+      .indicator-filters select {
+        min-height: 42px;
+        padding: 8px 10px;
+        border: 1px solid #ffffff52;
+        border-radius: 9px;
+        color: white;
+        background: #063f3c;
+        font: inherit;
+      }
       button {
         font: inherit;
       }
@@ -499,6 +555,9 @@
           gap: 10px;
         }
         .filters { grid-template-columns: 1fr; }
+        .automation-head { display: grid; }
+        .automation-metrics { grid-template-columns: 1fr; }
+        .indicator-filters { grid-template-columns: 1fr; }
       }
     </style>
   </head>
@@ -598,10 +657,10 @@
         <p class="image-note">Imagens ilustrativas geradas para representar situações genéricas do serviço público de saúde; não retratam participantes reais do projeto.</p>
         <section class="section" id="dados">
           <div class="section-head">
-            <h2>Módulo automático inicial</h2>
+            <h2>Dashboard consolidado de indicadores</h2>
             <p>
-              Consulte automaticamente o contexto demográfico de estados e
-              municípios brasileiros, sem valores simulados.
+              Consulte indicadores automáticos por localidade e acompanhe as
+              fontes integradas ao piloto, sem valores simulados.
             </p>
           </div>
           <div class="filters" aria-label="Filtros de localização">
@@ -679,6 +738,42 @@
               </div>
             </article>
           </div>
+          <article class="automation-panel" aria-labelledby="cnes-title">
+            <div class="automation-head">
+              <div>
+                <h3 id="cnes-title">Piloto automático CNES — Lavras/MG</h3>
+                <p>Cadastro de estabelecimentos de saúde atualizado mensalmente com dados públicos do DATASUS.</p>
+              </div>
+              <span class="automation-badge" id="cnes-badge">Preparando</span>
+            </div>
+            <div class="indicator-filters" aria-label="Filtros do indicador CNES">
+              <label>Localidade
+                <select aria-label="Localidade do CNES" disabled>
+                  <option>Lavras/MG — cobertura piloto</option>
+                </select>
+              </label>
+              <label>Competência
+                <select aria-label="Competência do CNES" disabled>
+                  <option>Última competência disponível</option>
+                </select>
+              </label>
+            </div>
+            <div class="automation-metrics">
+              <div class="automation-metric">
+                <small>Estabelecimentos cadastrados</small>
+                <strong id="cnes-total">—</strong>
+              </div>
+              <div class="automation-metric">
+                <small>Competência disponível</small>
+                <strong id="cnes-period">—</strong>
+              </div>
+              <div class="automation-metric">
+                <small>Fonte automatizada</small>
+                <strong>CNES/DATASUS</strong>
+              </div>
+            </div>
+            <p class="automation-note" id="cnes-note">Aguardando a primeira execução automática pelo GitHub.</p>
+          </article>
         </section>
         <section class="section" id="resultados">
           <div class="section-head">
@@ -867,6 +962,33 @@
       stateSelect.onchange = () => loadCities();
       citySelect.onchange = load;
       loadStates();
+      async function loadCnesPilot() {
+        const badge = document.getElementById("cnes-badge"),
+          total = document.getElementById("cnes-total"),
+          period = document.getElementById("cnes-period"),
+          note = document.getElementById("cnes-note");
+        try {
+          const response = await fetch("./data/cnes-lavras.json", { cache: "no-store" });
+          if (!response.ok) throw Error();
+          const data = await response.json();
+          if (data.status !== "ok") {
+            badge.textContent = "Primeira atualização pendente";
+            note.textContent = data.observacao;
+            return;
+          }
+          badge.textContent = "Atualização automática ativa";
+          total.textContent = fmt(data.total_estabelecimentos);
+          period.textContent = String(data.competencia || "—").replace("-", "/");
+          const updated = data.atualizado_em
+            ? new Date(data.atualizado_em).toLocaleString("pt-BR")
+            : "não informado";
+          note.textContent = `Atualizado em ${updated}. ${data.observacao}`;
+        } catch (error) {
+          badge.textContent = "Dados temporariamente indisponíveis";
+          note.textContent = "A página continua disponível e tentará carregar o resumo novamente no próximo acesso.";
+        }
+      }
+      loadCnesPilot();
     </script>
   </body>
 </html>

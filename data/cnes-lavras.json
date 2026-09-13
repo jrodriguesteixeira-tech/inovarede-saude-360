@@ -1,0 +1,13 @@
+{
+  "status": "aguardando_primeira_atualizacao",
+  "fonte": "CNES/DATASUS via PySUS",
+  "municipio": "Lavras",
+  "uf": "MG",
+  "codigo_ibge": "3138203",
+  "competencia": null,
+  "atualizado_em": null,
+  "total_estabelecimentos": null,
+  "gestao": {},
+  "amostra_estabelecimentos": [],
+  "observacao": "A rotina automática será executada pelo GitHub Actions."
+}
