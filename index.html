@@ -118,6 +118,42 @@
         max-width: 850px;
         line-height: 1.6;
       }
+
+      .student-highlight {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        gap: 18px;
+        margin: 22px 0 8px;
+        padding: 20px 22px;
+        border-radius: 18px;
+        background: linear-gradient(115deg, #d6ff3f 0%, #75edbb 52%, #39cfbd 100%);
+        color: #063f57;
+        box-shadow: 0 16px 34px rgba(0, 140, 122, .2);
+        border: 1px solid rgba(6, 63, 87, .12);
+      }
+      .student-highlight-icon {
+        width: 54px;
+        height: 54px;
+        border-radius: 16px;
+        display: grid;
+        place-items: center;
+        background: #063f57;
+        color: #d6ff3f;
+        font-size: 1.55rem;
+        font-weight: 900;
+      }
+      .student-highlight h2 { margin: 0 0 4px; font-size: 1.2rem; }
+      .student-highlight p { margin: 0; font-size: .85rem; line-height: 1.45; }
+      .student-highlight a {
+        padding: 12px 18px;
+        border-radius: 12px;
+        background: #063f57;
+        color: white;
+        font-weight: 850;
+        white-space: nowrap;
+        box-shadow: 0 7px 16px rgba(6, 63, 87, .18);
+      }
       .hero {
         background:
           linear-gradient(90deg, rgba(3, 53, 75, 0.96) 0%, rgba(0, 112, 104, 0.82) 48%, rgba(0, 74, 91, 0.2) 100%),
@@ -641,6 +677,15 @@
         }
       }
       @media (max-width: 700px) {
+
+        .student-highlight {
+          grid-template-columns: auto 1fr;
+          padding: 17px;
+        }
+        .student-highlight a {
+          grid-column: 1 / -1;
+          text-align: center;
+        }
         .shell {
           display: block;
         }
@@ -725,6 +770,15 @@
             excelência assistencial no SUS.
           </p>
         </header>
+
+        <aside class="student-highlight" aria-label="Destaque para a Área do Aluno">
+          <div class="student-highlight-icon" aria-hidden="true">▶</div>
+          <div>
+            <h2>Área do Aluno</h2>
+            <p>Acesse cursos, aulas, materiais e acompanhe sua formação no Inov@Rede Saúde 360.</p>
+          </div>
+          <a href="area-aluno.html">Acessar área de cursos →</a>
+        </aside>
         <section class="hero">
           <div>
             <h2>Transformação da gestão e do cuidado no território</h2>
