@@ -528,31 +528,54 @@
       }
       .trl {
         margin-top: 14px;
-        background: white;
-        border: 1px solid var(--line);
-        border-radius: 17px;
-        padding: 19px;
+        color: white;
+        background: linear-gradient(135deg, #073d55, #075f62 65%, #098674);
+        border: 1px solid #1ab6a1;
+        border-radius: 22px;
+        padding: 24px;
+        box-shadow: 0 18px 42px #064e4a2d;
       }
-      .trl-line {
-        display: grid;
-        grid-template-columns: repeat(9, 1fr);
-        gap: 5px;
-        margin-top: 15px;
+      .trl-hero { display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: center; }
+      .trl-badge {
+        width: 104px; height: 104px; border-radius: 50%; display: grid; place-items: center;
+        text-align: center; line-height: 1; color: #073d42; background: #d7ff58;
+        border: 7px solid #ffffff24; box-shadow: 0 10px 26px #002e3038;
       }
-      .level {
-        height: 9px;
-        background: #dce8e5;
-        border-radius: 9px;
-      }
-      .level.on {
-        background: var(--green);
-      }
-      .trl-note {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 9px;
-        color: var(--muted);
-        font-size: 0.73rem;
+      .trl-badge small { display: block; font-size: .7rem; font-weight: 800; letter-spacing: .08em; }
+      .trl-badge strong { display: block; font-size: 2.2rem; margin-top: 4px; }
+      .trl-title strong { display: block; font-size: 1.35rem; }
+      .trl-title span { display: block; margin-top: 5px; color: #c7ebe6; }
+      .trl-validation { padding: 9px 12px; border-radius: 999px; background: #ffffff16; border: 1px solid #ffffff32; font-size: .76rem; font-weight: 800; }
+      .trl-scale { display: grid; grid-template-columns: repeat(9, 1fr); gap: 6px; margin-top: 24px; }
+      .trl-step { min-width: 0; text-align: center; }
+      .trl-step i { display: block; height: 10px; border-radius: 10px; background: #ffffff2c; }
+      .trl-step span { display: block; margin-top: 7px; color: #acd5d0; font-size: .68rem; }
+      .trl-step.done i { background: #5ce7cf; }
+      .trl-step.current i { background: #d7ff58; box-shadow: 0 0 0 4px #d7ff5822; }
+      .trl-step.current span { color: #efffb8; font-weight: 900; }
+      .trl-evidence-progress { margin-top: 20px; padding: 15px; border-radius: 14px; background: #ffffff11; border: 1px solid #ffffff24; }
+      .trl-evidence-head { display: flex; justify-content: space-between; gap: 14px; color: #d9f2ef; font-size: .82rem; }
+      .trl-evidence-head strong { color: white; }
+      .trl-progress { height: 10px; margin-top: 10px; border-radius: 10px; overflow: hidden; background: #ffffff24; }
+      .trl-progress i { display: block; width: 80%; height: 100%; background: linear-gradient(90deg, #5ce7cf, #d7ff58); }
+      .trl-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+      .trl-card { padding: 17px; border-radius: 15px; background: #ffffffee; color: var(--ink); }
+      .trl-card.next { background: #f5ffd9; border: 1px solid #d7ff58; }
+      .trl-card h3 { margin: 0 0 10px; font-size: 1rem; }
+      .trl-card ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+      .trl-card li { position: relative; padding-left: 23px; color: #496764; font-size: .8rem; line-height: 1.35; }
+      .trl-card li::before { content: "✓"; position: absolute; left: 0; color: var(--green); font-weight: 900; }
+      .trl-card.next li::before { content: "→"; color: #745f00; }
+      .trl-details { margin-top: 14px; border-top: 1px solid #ffffff30; padding-top: 14px; }
+      .trl-details summary { cursor: pointer; color: #d7ff58; font-weight: 850; }
+      .trl-details p { color: #c7ebe6; line-height: 1.55; font-size: .8rem; }
+      .trl-details a { display: inline-block; padding: 9px 12px; border-radius: 9px; background: white; color: #07675f; font-weight: 850; font-size: .8rem; }
+      .trl-warning { margin-top: 14px; color: #c7ebe6; font-size: .75rem; line-height: 1.5; }
+      @media (max-width: 700px) {
+        .trl-hero { grid-template-columns: auto 1fr; }
+        .trl-validation { grid-column: 1 / -1; width: fit-content; }
+        .trl-cards { grid-template-columns: 1fr; }
+        .trl-step span { font-size: .58rem; }
       }
       .foot {
         text-align: center;
@@ -984,23 +1007,55 @@
             </p>
           </div>
           <div class="trl">
-            <strong>Referência de evolução da plataforma</strong>
-            <div class="trl-line">
-              <i class="level on"></i><i class="level on"></i
-              ><i class="level on"></i><i class="level"></i><i class="level"></i
-              ><i class="level"></i><i class="level"></i><i class="level"></i
-              ><i class="level"></i>
+            <div class="trl-hero">
+              <div class="trl-badge"><div><small>TRL</small><strong>4</strong></div></div>
+              <div class="trl-title">
+                <strong>Protótipo funcional em validação controlada</strong>
+                <span>Nível atual estimado da plataforma Inov@Rede Saúde 360</span>
+              </div>
+              <span class="trl-validation">Estimativa técnica</span>
             </div>
-            <div class="trl-note">
-              <span>TRL 1 — princípios</span
-              ><span>Prova de conceito em desenvolvimento</span
-              ><span>TRL 9 — operação</span>
+            <div class="trl-scale" aria-label="Escala de maturidade tecnológica de 1 a 9">
+              <div class="trl-step done"><i></i><span>TRL 1</span></div>
+              <div class="trl-step done"><i></i><span>TRL 2</span></div>
+              <div class="trl-step done"><i></i><span>TRL 3</span></div>
+              <div class="trl-step current"><i></i><span>TRL 4</span></div>
+              <div class="trl-step"><i></i><span>TRL 5</span></div>
+              <div class="trl-step"><i></i><span>TRL 6</span></div>
+              <div class="trl-step"><i></i><span>TRL 7</span></div>
+              <div class="trl-step"><i></i><span>TRL 8</span></div>
+              <div class="trl-step"><i></i><span>TRL 9</span></div>
             </div>
-            <div class="notice">
-              O nível definitivo deverá ser validado pela equipe com base em
-              protótipos, testes com usuários, ambiente relevante e operação
-              real.
+            <div class="trl-evidence-progress">
+              <div class="trl-evidence-head"><span>Evidências previstas para validação formal do TRL 4</span><strong>4 de 5 • 80%</strong></div>
+              <div class="trl-progress" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"><i></i></div>
             </div>
+            <div class="trl-cards">
+              <article class="trl-card">
+                <h3>Evidências já disponíveis</h3>
+                <ul>
+                  <li>Plataforma funcional e publicada</li>
+                  <li>Integração com fontes públicas oficiais</li>
+                  <li>Filtros nacionais por estado e município</li>
+                  <li>Rotinas automáticas e histórico no GitHub</li>
+                </ul>
+              </article>
+              <article class="trl-card next">
+                <h3>Próximo marco — TRL 5</h3>
+                <ul>
+                  <li>Executar testes com gestores municipais</li>
+                  <li>Avaliar usabilidade e utilidade decisória</li>
+                  <li>Registrar falhas, ajustes e nova versão</li>
+                  <li>Emitir relatório e aceite da equipe responsável</li>
+                </ul>
+              </article>
+            </div>
+            <details class="trl-details">
+              <summary>Consultar evidências e critérios de validação</summary>
+              <p>O dossiê deverá reunir endereço e versão da plataforma, registros das atualizações, testes funcionais, atas, avaliações de usuários, relatório técnico e parecer da comissão de validação.</p>
+              <a href="https://github.com/jrodriguesteixeira-tech/inovarede-saude-360" target="_blank" rel="noopener">Ver código e histórico de versões</a>
+            </details>
+            <p class="trl-warning">O TRL 4 é uma estimativa fundamentada nas evidências técnicas atuais. A atribuição definitiva deverá ser formalizada pela equipe ou comissão responsável pelo projeto.</p>
           </div>
         </section>
         <p class="foot">
