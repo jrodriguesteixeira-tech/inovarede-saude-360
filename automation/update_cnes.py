@@ -71,7 +71,13 @@ def main():
     frame, year, month = load_latest()
     city_column = find_column(
         frame.columns,
-        ["CO_MUNICIP", "CO_MUNICIPIO", "CO_MUNICIPIO_GESTOR", "MUNIC_RES"],
+        [
+            "CODUFMUN",
+            "CO_MUNICIP",
+            "CO_MUNICIPIO",
+            "CO_MUNICIPIO_GESTOR",
+            "MUNIC_RES",
+        ],
     )
     if city_column is None:
         raise RuntimeError("A coluna de município não foi encontrada no arquivo CNES.")
@@ -88,9 +94,15 @@ def main():
         raise RuntimeError("Nenhum estabelecimento de Lavras foi localizado.")
 
     cnes_column = find_column(city.columns, ["CNES", "CO_CNES", "CO_UNIDADE"])
-    name_column = find_column(city.columns, ["NO_FANTASIA", "NOME_FANTASIA", "NO_RAZAO_SOCIAL"])
-    type_column = find_column(city.columns, ["TP_UNID_ID", "CO_TIPO_UNIDADE", "TP_UNIDADE"])
-    management_column = find_column(city.columns, ["TP_GESTAO", "TP_GESTOR"])
+    name_column = find_column(
+        city.columns,
+        ["NOME_FANT", "NO_FANTASIA", "NOME_FANTASIA", "RAZAO_SOC", "NO_RAZAO_SOCIAL"],
+    )
+    type_column = find_column(
+        city.columns,
+        ["TP_UNID", "TP_UNID_ID", "CO_TIPO_UNIDADE", "TP_UNIDADE"],
+    )
+    management_column = find_column(city.columns, ["GESTAO", "TP_GESTAO", "TP_GESTOR"])
 
     if cnes_column:
         city = city.drop_duplicates(subset=[cnes_column])
