@@ -1,4 +1,4 @@
-name: Atualizar dados CNES
+name: Atualizar indicadores SUS
 
 on:
   schedule:
@@ -8,6 +8,7 @@ on:
     branches: ["main"]
     paths:
       - "automation/update_cnes.py"
+      - "automation/update_indicadores.py"
       - ".github/workflows/update-cnes.yml"
 
 permissions:
@@ -30,12 +31,14 @@ jobs:
           cache-dependency-path: automation/requirements.txt
       - name: Instalar PySUS
         run: pip install -r automation/requirements.txt
-      - name: Consultar CNES e gerar resumo
-        run: python automation/update_cnes.py
+      - name: Consultar bases do SUS e gerar resumos
+        run: |
+          python automation/update_cnes.py
+          python automation/update_indicadores.py
       - name: Salvar resultado
         run: |
           git config user.name "inovarede-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/cnes-lavras.json
+          git add data/cnes-lavras.json data/indicadores-lavras.json
           git diff --cached --quiet || git commit -m "Atualiza dados automáticos do CNES"
           git push

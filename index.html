@@ -671,6 +671,10 @@
                 <option value="all">Visão consolidada</option>
                 <option value="demografia">Demografia e população</option>
                 <option value="cnes">Estabelecimentos — CNES</option>
+                <option value="internacoes">Internações hospitalares — SIH/SUS</option>
+                <option value="mortalidade">Mortalidade — SIM</option>
+                <option value="nascimentos">Nascidos vivos — SINASC</option>
+                <option value="ambulatorial">Produção ambulatorial — SIA/SUS</option>
               </select>
             </label>
           </div>
@@ -694,6 +698,26 @@
               <small>Competência CNES</small>
               <strong id="dashboard-cnes-period">Carregando…</strong>
               <span>Atualização mensal automática</span>
+            </article>
+            <article class="summary-card" data-dashboard-indicator="internacoes">
+              <small>Internações hospitalares</small>
+              <strong id="dashboard-internacoes">Carregando…</strong>
+              <span id="dashboard-internacoes-meta">SIH/SUS • residência</span>
+            </article>
+            <article class="summary-card" data-dashboard-indicator="mortalidade">
+              <small>Óbitos registrados</small>
+              <strong id="dashboard-mortalidade">Carregando…</strong>
+              <span id="dashboard-mortalidade-meta">SIM • residência</span>
+            </article>
+            <article class="summary-card" data-dashboard-indicator="nascimentos">
+              <small>Nascidos vivos</small>
+              <strong id="dashboard-nascimentos">Carregando…</strong>
+              <span id="dashboard-nascimentos-meta">SINASC • residência da mãe</span>
+            </article>
+            <article class="summary-card" data-dashboard-indicator="ambulatorial">
+              <small>Produção ambulatorial aprovada</small>
+              <strong id="dashboard-ambulatorial">Carregando…</strong>
+              <span id="dashboard-ambulatorial-meta">SIA/SUS • local de atendimento</span>
             </article>
           </div>
           <a class="dashboard-link" href="#dados">Abrir filtros e gráficos detalhados →</a>
@@ -1090,6 +1114,31 @@
         }
       }
       loadCnesPilot();
+      async function loadHealthIndicators() {
+        const keys = ["internacoes", "mortalidade", "nascimentos", "ambulatorial"];
+        try {
+          const response = await fetch("./data/indicadores-lavras.json", { cache: "no-store" });
+          if (!response.ok) throw Error();
+          const data = await response.json();
+          keys.forEach((key) => {
+            const item = data.indicadores?.[key],
+              value = document.getElementById("dashboard-" + key),
+              meta = document.getElementById("dashboard-" + key + "-meta");
+            if (!item || item.status !== "ok") {
+              value.textContent = "Indisponível";
+              meta.textContent = "Fonte ainda não retornou uma competência válida";
+              return;
+            }
+            value.textContent = fmt(item.valor);
+            meta.textContent = `${item.fonte} • ${String(item.competencia).replace("-", "/")} • ${item.unidade}`;
+          });
+        } catch (error) {
+          keys.forEach((key) => {
+            document.getElementById("dashboard-" + key).textContent = "Indisponível";
+          });
+        }
+      }
+      loadHealthIndicators();
       document.getElementById("dashboard-indicator-filter").onchange = (event) => {
         const selected = event.target.value;
         document.querySelectorAll("[data-dashboard-indicator]").forEach((card) => {

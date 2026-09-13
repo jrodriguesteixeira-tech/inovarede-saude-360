@@ -1,0 +1,9 @@
+{
+  "status": "aguardando_primeira_atualizacao",
+  "municipio": "Lavras",
+  "uf": "MG",
+  "codigo_ibge": "3138203",
+  "atualizado_em": null,
+  "indicadores": {},
+  "nota": "Aguardando a primeira execução automática."
+}
