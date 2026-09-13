@@ -708,7 +708,7 @@
           <span>Inov@Rede 360</span>
         </div>
         <nav class="nav">
-          <a href="#projeto">Projeto</a><a href="#dashboard">Dashboard</a><a href="#metas">Metas automáticas</a><a href="#diagnostico">Diagnóstico ampliado</a
+          <a href="#projeto">Projeto</a><a href="#dashboard">Dashboard</a><a href="#metas">Metas automáticas</a
           ><a href="#eixos">Cinco eixos</a><a href="#dados">Dados detalhados</a
           ><a href="#resultados">Resultados</a><a href="#trl">Maturidade</a>
         </nav>
@@ -746,8 +746,8 @@
         <section class="dashboard-spotlight" id="dashboard">
           <div class="dashboard-top">
             <div>
-              <h2>Dashboard consolidado</h2>
-              <p>Visão rápida dos indicadores automáticos disponíveis no piloto.</p>
+              <h2>Painel integrado de indicadores municipais</h2>
+              <p>Números consolidados e indicadores ampliados, atualizados para a mesma localidade.</p>
             </div>
             <label class="dashboard-control" for="dashboard-indicator-filter">
               Filtrar por indicador
@@ -832,7 +832,33 @@
             </div>
             <p class="goal-disclaimer">Referência operacional do piloto. Não substitui metas pactuadas na Programação Anual de Saúde.</p>
           </section>
-          <a class="dashboard-link" href="#dados">Abrir filtros e gráficos detalhados →</a>
+        <div class="diagnostic-panel" id="diagnostico" aria-labelledby="diagnostico-title">
+          <div class="diagnostic-head">
+            <div>
+              <h2 id="diagnostico-title">Indicadores ampliados automáticos</h2>
+              <p>Taxas e relações calculadas para complementar os números consolidados da mesma localidade.</p>
+            </div>
+            <div class="diagnostic-select">
+              <label for="diagnostic-filter">Filtrar grupo de indicadores</label>
+              <select id="diagnostic-filter">
+                <option value="all">Todos os grupos</option>
+                <option value="context">Contexto e estrutura</option>
+                <option value="care">Utilização dos serviços</option>
+                <option value="outcome">Resultados demográficos</option>
+              </select>
+            </div>
+          </div>
+          <div class="diagnostic-grid" aria-live="polite">
+            <article class="diagnostic-card context" data-diagnostic="context"><div><small>Contexto e estrutura</small><strong id="diag-cnes-rate">—</strong><p>Estabelecimentos registrados no CNES por 10 mil habitantes.</p></div><p id="diag-cnes-rate-meta">Aguardando os dados oficiais.</p></article>
+            <article class="diagnostic-card care" data-diagnostic="care"><div><small>Utilização hospitalar</small><strong id="diag-hospital-rate">—</strong><p>Internações do SIH/SUS por 100 mil habitantes.</p></div><p id="diag-hospital-rate-meta">Aguardando os dados oficiais.</p></article>
+            <article class="diagnostic-card outcome" data-diagnostic="outcome"><div><small>Mortalidade geral</small><strong id="diag-mortality-rate">—</strong><p>Óbitos registrados no SIM por 100 mil habitantes.</p></div><p id="diag-mortality-rate-meta">Aguardando os dados oficiais.</p></article>
+            <article class="diagnostic-card outcome" data-diagnostic="outcome"><div><small>Natalidade</small><strong id="diag-birth-rate">—</strong><p>Nascidos vivos registrados no SINASC por mil habitantes.</p></div><p id="diag-birth-rate-meta">Aguardando os dados oficiais.</p></article>
+            <article class="diagnostic-card care" data-diagnostic="care"><div><small>Produção ambulatorial</small><strong id="diag-ambulatory-rate">—</strong><p>Procedimentos aprovados no SIA/SUS por habitante.</p></div><p id="diag-ambulatory-rate-meta">Aguardando os dados oficiais.</p></article>
+            <article class="diagnostic-card care" data-diagnostic="care"><div><small>Relação produção–estrutura</small><strong id="diag-productivity-rate">—</strong><p>Procedimentos ambulatoriais por estabelecimento registrado.</p></div><p id="diag-productivity-rate-meta">Aguardando os dados oficiais.</p></article>
+          </div>
+          <p class="diagnostic-note"><b>Leitura responsável:</b> cada sistema possui competência própria. As taxas são calculadas pelo painel com dados oficiais disponíveis e população do IBGE; servem ao diagnóstico e não substituem metas pactuadas ou análise epidemiológica.</p>
+        </div>
+          <a class="dashboard-link" href="#dados">Selecionar estado e município e abrir gráficos →</a>
         </section>
         <section class="section" id="eixos">
           <div class="section-head">
@@ -1004,33 +1030,6 @@
             </div>
             <p class="automation-note" id="cnes-note">Aguardando a primeira execução automática pelo GitHub.</p>
           </article>
-        </section>
-
-        <section class="diagnostic-panel" id="diagnostico" aria-labelledby="diagnostico-title">
-          <div class="diagnostic-head">
-            <div>
-              <h2 id="diagnostico-title">Diagnóstico municipal ampliado</h2>
-              <p>Indicadores comparáveis calculados automaticamente para a localidade selecionada.</p>
-            </div>
-            <div class="diagnostic-select">
-              <label for="diagnostic-filter">Filtrar grupo de indicadores</label>
-              <select id="diagnostic-filter">
-                <option value="all">Todos os grupos</option>
-                <option value="context">Contexto e estrutura</option>
-                <option value="care">Utilização dos serviços</option>
-                <option value="outcome">Resultados demográficos</option>
-              </select>
-            </div>
-          </div>
-          <div class="diagnostic-grid" aria-live="polite">
-            <article class="diagnostic-card context" data-diagnostic="context"><div><small>Contexto e estrutura</small><strong id="diag-cnes-rate">—</strong><p>Estabelecimentos registrados no CNES por 10 mil habitantes.</p></div><p id="diag-cnes-rate-meta">Aguardando os dados oficiais.</p></article>
-            <article class="diagnostic-card care" data-diagnostic="care"><div><small>Utilização hospitalar</small><strong id="diag-hospital-rate">—</strong><p>Internações do SIH/SUS por 100 mil habitantes.</p></div><p id="diag-hospital-rate-meta">Aguardando os dados oficiais.</p></article>
-            <article class="diagnostic-card outcome" data-diagnostic="outcome"><div><small>Mortalidade geral</small><strong id="diag-mortality-rate">—</strong><p>Óbitos registrados no SIM por 100 mil habitantes.</p></div><p id="diag-mortality-rate-meta">Aguardando os dados oficiais.</p></article>
-            <article class="diagnostic-card outcome" data-diagnostic="outcome"><div><small>Natalidade</small><strong id="diag-birth-rate">—</strong><p>Nascidos vivos registrados no SINASC por mil habitantes.</p></div><p id="diag-birth-rate-meta">Aguardando os dados oficiais.</p></article>
-            <article class="diagnostic-card care" data-diagnostic="care"><div><small>Produção ambulatorial</small><strong id="diag-ambulatory-rate">—</strong><p>Procedimentos aprovados no SIA/SUS por habitante.</p></div><p id="diag-ambulatory-rate-meta">Aguardando os dados oficiais.</p></article>
-            <article class="diagnostic-card care" data-diagnostic="care"><div><small>Relação produção–estrutura</small><strong id="diag-productivity-rate">—</strong><p>Procedimentos ambulatoriais por estabelecimento registrado.</p></div><p id="diag-productivity-rate-meta">Aguardando os dados oficiais.</p></article>
-          </div>
-          <p class="diagnostic-note"><b>Leitura responsável:</b> cada sistema possui competência própria. As taxas são calculadas pelo painel com dados oficiais disponíveis e população do IBGE; servem ao diagnóstico e não substituem metas pactuadas ou análise epidemiológica.</p>
         </section>
 
         <section class="section" id="resultados">
