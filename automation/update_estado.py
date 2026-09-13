@@ -1,5 +1,5 @@
 """Resume cinco bases do PySUS para todos os municípios de uma UF."""
-import argparse, json
+import argparse, gc, json, multiprocessing as mp
 from datetime import datetime, timezone
 from pathlib import Path
 import pandas as pd
@@ -45,13 +45,43 @@ def annual(fn, uf, group, city_cols):
             if len(out):return {str(k):int(v) for k,v in out.items()},str(y)
         except Exception:continue
     return {},None
+
+def collect_indicator(name, uf):
+    tasks={
+      "cnes":lambda:monthly(pysus.ftp.cnes,uf,"ST",["CODUFMUN","CO_MUNICIP"]),
+      "internacoes":lambda:monthly(pysus.ftp.sih,uf,"RD",["MUNIC_RES","MUNIC_MOV"]),
+      "mortalidade":lambda:annual(pysus.ftp.sim,uf,"DO",["CODMUNRES","MUN_RES"]),
+      "nascimentos":lambda:annual(pysus.ftp.sinasc,uf,"DN",["CODMUNRES","MUN_RES"]),
+      "ambulatorial":lambda:monthly(pysus.ftp.sia,uf,"PA",["PA_UFMUN","UFMUN"],"PA_QTDAPR"),
+    }
+    return tasks[name]()
+
+def collect_worker(name, uf, output):
+    values, competence=collect_indicator(name,uf)
+    Path(output).write_text(json.dumps({"values":values,"competence":competence},separators=(",",":")),encoding="utf-8")
+    del values
+    gc.collect()
+
 def main():
     p=argparse.ArgumentParser();p.add_argument("--state",required=True);uf=p.parse_args().state.upper()
-    cnes,cnes_p=monthly(pysus.ftp.cnes,uf,"ST",["CODUFMUN","CO_MUNICIP"])
-    sih,sih_p=monthly(pysus.ftp.sih,uf,"RD",["MUNIC_RES","MUNIC_MOV"])
-    sim,sim_p=annual(pysus.ftp.sim,uf,"DO",["CODMUNRES","MUN_RES"])
-    nasc,nasc_p=annual(pysus.ftp.sinasc,uf,"DN",["CODMUNRES","MUN_RES"])
-    sia,sia_p=monthly(pysus.ftp.sia,uf,"PA",["PA_UFMUN","UFMUN"],"PA_QTDAPR")
+    # Cada base roda em um processo isolado. Ao terminar, toda a memoria usada
+    # pelo parquet e pelo DataFrame e devolvida antes da proxima base. Isso e
+    # especialmente importante para o SIA de Sao Paulo.
+    partial=Path("generated")/"partials";partial.mkdir(parents=True,exist_ok=True)
+    results={}; context=mp.get_context("spawn")
+    for name in ("cnes","internacoes","mortalidade","nascimentos","ambulatorial"):
+        target=partial/f"{uf}-{name}.json"
+        process=context.Process(target=collect_worker,args=(name,uf,str(target)))
+        process.start();process.join()
+        if process.exitcode or not target.exists():
+            results[name]=({},None)
+        else:
+            item=json.loads(target.read_text(encoding="utf-8"))
+            results[name]=(item["values"],item["competence"])
+        target.unlink(missing_ok=True)
+    cnes,cnes_p=results["cnes"];sih,sih_p=results["internacoes"]
+    sim,sim_p=results["mortalidade"];nasc,nasc_p=results["nascimentos"]
+    sia,sia_p=results["ambulatorial"]
     all_codes=set(cnes)|set(sih)|set(sim)|set(nasc)|set(sia)
     municipios={code:{"cnes":cnes.get(code),"internacoes":sih.get(code),"mortalidade":sim.get(code),
       "nascimentos":nasc.get(code),"ambulatorial":sia.get(code)} for code in sorted(all_codes)}
