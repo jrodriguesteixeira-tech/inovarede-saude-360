@@ -1,5 +1,5 @@
-"""Resume cinco bases do PySUS para todos os municípios de uma UF."""
-import argparse, gc, json, multiprocessing as mp
+"""Resume cinco bases do PySUS para todos os municÃ­pios de uma UF."""
+import argparse, gc, json, subprocess, sys
 from datetime import datetime, timezone
 from pathlib import Path
 import pandas as pd
@@ -119,17 +119,24 @@ def collect_worker(name, uf, output):
     gc.collect()
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument("--state",required=True);uf=p.parse_args().state.upper()
-    # Cada base roda em um processo isolado. Ao terminar, toda a memoria usada
-    # pelo parquet e pelo DataFrame e devolvida antes da proxima base. Isso e
-    # especialmente importante para o SIA de Sao Paulo.
+    p=argparse.ArgumentParser();p.add_argument("--state",required=True)
+    p.add_argument("--indicator");p.add_argument("--output")
+    args=p.parse_args();uf=args.state.upper()
+    if args.indicator:
+        if not args.output:raise SystemExit("--output e obrigatorio com --indicator")
+        collect_worker(args.indicator,uf,args.output)
+        return
+    # Cada base roda em um interpretador Python isolado. Isso libera toda a
+    # memoria ao fim de cada base sem usar semaforos do multiprocessing, que
+    # podiam ficar presos no encerramento da coleta mais volumosa de Sao Paulo.
     partial=Path("generated")/"partials";partial.mkdir(parents=True,exist_ok=True)
-    results={}; context=mp.get_context("spawn")
+    results={}
     for name in ("cnes","internacoes","mortalidade","nascimentos","ambulatorial"):
         target=partial/f"{uf}-{name}.json"
-        process=context.Process(target=collect_worker,args=(name,uf,str(target)))
-        process.start();process.join()
-        if process.exitcode or not target.exists():
+        command=[sys.executable,str(Path(__file__).resolve()),"--state",uf,
+                 "--indicator",name,"--output",str(target.resolve())]
+        completed=subprocess.run(command,check=False,timeout=3600)
+        if completed.returncode or not target.exists():
             results[name]=({},None,{})
         else:
             item=json.loads(target.read_text(encoding="utf-8"))
@@ -160,3 +167,4 @@ def main():
     out=Path("generated")/f"{uf}.json";out.parent.mkdir(exist_ok=True)
     out.write_text(json.dumps(data,ensure_ascii=False,separators=(",",":")),encoding="utf-8")
 if __name__=="__main__":main()
+    
