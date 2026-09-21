@@ -642,7 +642,7 @@
       .diagnostic-select select { width:100%; border:2px solid #65e6d3; border-radius:12px; padding:11px 12px; background:#fff; color:var(--ink); font-weight:700; }
       .diagnostic-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
       .diagnostic-card { --accent:#54dfca; min-height:170px; display:flex; flex-direction:column; justify-content:space-between; padding:18px; border-radius:18px; background:rgba(255,255,255,.96); color:var(--ink); border-top:6px solid var(--accent); }
-      .diagnostic-card.context { --accent:#f17678; } .diagnostic-card.care { --accent:#55d8c5; } .diagnostic-card.outcome { --accent:#76a7e2; }
+      .diagnostic-card.context { --accent:#f17678; } .diagnostic-card.care { --accent:#55d8c5; } .diagnostic-card.maternal { --accent:#d7ff58; } .diagnostic-card.outcome { --accent:#76a7e2; }
       .diagnostic-card small { color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
       .diagnostic-card strong { display:block; margin:9px 0 4px; font-size:clamp(1.55rem,3vw,2.15rem); line-height:1; }
       .diagnostic-card p { margin:0; color:var(--muted); font-size:.78rem; line-height:1.45; }
@@ -759,7 +759,7 @@
         <nav class="nav">
           <a href="#projeto">Projeto</a><a href="#dashboard">Dashboard</a><a href="area-aluno.html">Área do Aluno</a><a href="#metas">Metas automáticas</a
           ><a href="#eixos">Cinco eixos</a><a href="#dados">Dados detalhados</a
-          ><a href="#resultados">Resultados</a><a href="pesquisa.html">Pesquisa</a><a href="#trl">Maturidade</a>
+          ><a href="#resultados">Resultados</a><a href="#trl">Maturidade</a>
         </nav>
         <div class="aside-foot">
           Inovação pública em saúde<br />Universidade Federal de Lavras
@@ -902,6 +902,7 @@
                 <option value="all">Todos os grupos</option>
                 <option value="context">Contexto e estrutura</option>
                 <option value="care">Utilização dos serviços</option>
+                <option value="maternal">Saúde materno-infantil</option>
                 <option value="outcome">Resultados demográficos</option>
               </select>
             </div>
@@ -913,6 +914,12 @@
             <article class="diagnostic-card outcome" data-diagnostic="outcome"><div><small>Natalidade</small><strong id="diag-birth-rate">—</strong><p>Nascidos vivos registrados no SINASC por mil habitantes.</p></div><p id="diag-birth-rate-meta">Aguardando os dados oficiais.</p></article>
             <article class="diagnostic-card care" data-diagnostic="care"><div><small>Produção ambulatorial</small><strong id="diag-ambulatory-rate">—</strong><p>Procedimentos aprovados no SIA/SUS por habitante.</p></div><p id="diag-ambulatory-rate-meta">Aguardando os dados oficiais.</p></article>
             <article class="diagnostic-card care" data-diagnostic="care"><div><small>Relação produção–estrutura</small><strong id="diag-productivity-rate">—</strong><p>Procedimentos ambulatoriais por estabelecimento registrado.</p></div><p id="diag-productivity-rate-meta">Aguardando os dados oficiais.</p></article>
+            <article class="diagnostic-card maternal" data-diagnostic="maternal"><div><small>Acompanhamento materno-infantil</small><strong id="diag-prenatal-seven">—</strong><p>Nascidos vivos cujas mães realizaram sete ou mais consultas de pré-natal.</p></div><p id="diag-prenatal-seven-meta">Aguardando atualização automática.</p></article>
+            <article class="diagnostic-card maternal" data-diagnostic="maternal"><div><small>Condições ao nascer</small><strong id="diag-low-weight">—</strong><p>Nascidos vivos com peso inferior a 2.500 gramas.</p></div><p id="diag-low-weight-meta">Aguardando atualização automática.</p></article>
+            <article class="diagnostic-card maternal" data-diagnostic="maternal"><div><small>Condições maternas</small><strong id="diag-teen-mother">—</strong><p>Nascidos vivos de mães com idade entre 10 e 19 anos.</p></div><p id="diag-teen-mother-meta">Aguardando atualização automática.</p></article>
+            <article class="diagnostic-card maternal" data-diagnostic="maternal"><div><small>Condições ao nascer</small><strong id="diag-low-apgar">—</strong><p>Recém-nascidos com índice de Apgar inferior a 7 no quinto minuto.</p></div><p id="diag-low-apgar-meta">Aguardando atualização automática.</p></article>
+            <article class="diagnostic-card maternal" data-diagnostic="maternal"><div><small>Condições ao nascer</small><strong id="diag-anomaly">—</strong><p>Nascidos vivos com anomalia congênita informada.</p></div><p id="diag-anomaly-meta">Aguardando atualização automática.</p></article>
+            <article class="diagnostic-card outcome" data-diagnostic="outcome"><div><small>Qualidade da informação</small><strong id="diag-ill-defined">—</strong><p>Óbitos cuja causa básica pertence ao capítulo de causas mal definidas.</p></div><p id="diag-ill-defined-meta">Aguardando atualização automática.</p></article>
           </div>
           <p class="diagnostic-note"><b>Leitura responsável:</b> cada sistema possui competência própria. As taxas são calculadas pelo painel com dados oficiais disponíveis e população do IBGE; servem ao diagnóstico e não substituem metas pactuadas ou análise epidemiológica.</p>
         </div>
@@ -1395,6 +1402,15 @@
         }
       }
       loadHealthIndicators();
+      function aggregateExpanded(cities) {
+        const result = {};
+        cities.forEach((city) => Object.entries(city.ampliados || {}).forEach(([key, item]) => {
+          if (!result[key]) result[key] = {n: 0, d: 0};
+          if (Number.isFinite(item?.n)) result[key].n += item.n;
+          if (Number.isFinite(item?.d)) result[key].d += item.d;
+        }));
+        return result;
+      }
       async function loadNationalHealth(place) {
         const keys = ["cnes", "internacoes", "mortalidade", "nascimentos", "ambulatorial"],
           uf = place.uf || stateSelect.options[stateSelect.selectedIndex]?.dataset.sigla,
@@ -1405,14 +1421,18 @@
           if (!response.ok) throw Error();
           const data = await response.json();
           const values = {}, displayedCompetences = {...(data.competencias || {})};
+          let expanded = {};
           if (place.kind === "Estado") {
+            const cities = Object.values(data.municipios || {});
             keys.forEach((key) => {
-              const entries = Object.values(data.municipios || {}).map((city) => city[key]).filter((v) => Number.isFinite(v));
+              const entries = cities.map((city) => city[key]).filter((v) => Number.isFinite(v));
               values[key] = entries.length ? entries.reduce((a, b) => a + b, 0) : null;
             });
+            expanded = aggregateExpanded(cities);
           } else {
             const cityCode = String(place.id).slice(0, 6);
             Object.assign(values, data.municipios?.[cityCode] || {});
+            expanded = data.municipios?.[cityCode]?.ampliados || {};
             // Mantem a ultima competencia municipal valida quando a remessa
             // estadual mais recente ainda nao contem producao daquele municipio.
             const municipalFallbacks = {
@@ -1430,7 +1450,7 @@
           });
           window.currentHealthValues = values;
           window.currentHealthCompetences = displayedCompetences;
-          renderExpandedIndicators(values, place, displayedCompetences);
+          renderExpandedIndicators(values, place, displayedCompetences, expanded);
           const currentAmb = values.ambulatorial,
             cityCodeForGoal = place.kind === "Estado" ? null : String(place.id).slice(0, 6),
             previousAmb = cityCodeForGoal ? data.anterior?.municipios?.[cityCodeForGoal]?.ambulatorial : null,
@@ -1485,7 +1505,7 @@
           ? value.toLocaleString("pt-BR", { minimumFractionDigits: digits, maximumFractionDigits: digits })
           : "Indisponível";
       }
-      function renderExpandedIndicators(values, place, competences) {
+      function renderExpandedIndicators(values, place, competences, expanded = {}) {
         const pop = Number(window.currentPopulation);
         const label = place.kind === "Estado" ? place.name : `${place.name}/${place.uf}`;
         const set = (id, value, unit, source, period, digits = 1) => {
@@ -1502,6 +1522,14 @@
         set("diag-birth-rate", Number.isFinite(values.nascimentos) ? values.nascimentos / pop * 1000 : NaN, "por mil", "SINASC", competences.nascimentos);
         set("diag-ambulatory-rate", Number.isFinite(values.ambulatorial) ? values.ambulatorial / pop : NaN, "por hab.", "SIA/SUS", competences.ambulatorial, 2);
         set("diag-productivity-rate", Number.isFinite(values.ambulatorial) && Number.isFinite(values.cnes) && values.cnes > 0 ? values.ambulatorial / values.cnes : NaN, "por estab.", "SIA/SUS + CNES", competences.ambulatorial, 1);
+        const pct = (key) => Number.isFinite(expanded[key]?.n) && Number.isFinite(expanded[key]?.d) && expanded[key].d > 0
+          ? expanded[key].n / expanded[key].d * 100 : NaN;
+        set("diag-prenatal-seven", pct("prenatal_7_mais"), "%", "SINASC", competences.nascimentos);
+        set("diag-low-weight", pct("baixo_peso"), "%", "SINASC", competences.nascimentos);
+        set("diag-teen-mother", pct("mae_adolescente"), "%", "SINASC", competences.nascimentos);
+        set("diag-low-apgar", pct("apgar5_menor_7"), "%", "SINASC", competences.nascimentos);
+        set("diag-anomaly", pct("anomalia_congenita"), "%", "SINASC", competences.nascimentos);
+        set("diag-ill-defined", pct("causas_mal_definidas"), "%", "SIM", competences.mortalidade);
       }
       document.getElementById("diagnostic-filter").onchange = (event) => {
         document.querySelectorAll("[data-diagnostic]").forEach((card) => {

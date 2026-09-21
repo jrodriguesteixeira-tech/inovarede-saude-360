@@ -11,14 +11,10 @@ Disponibilizar uma visão nacional de indicadores públicos de saúde, com sele�
 - dashboard consolidado;
 - filtros territoriais nacionais;
 - indicadores demográficos, de estabelecimentos e de produção assistencial;
+- indicadores automáticos de pré-natal, baixo peso ao nascer, maternidade na adolescência, Apgar no quinto minuto, anomalias congênitas e causas de óbito mal definidas;
 - metas automatizáveis quando a fonte fornece numerador, denominador e periodicidade compatíveis;
 - rotinas de atualização registradas em `automation/`;
 - dados e históricos estáticos servidos pelo GitHub Pages.
-- seção pública de pesquisa, com recorte, limites éticos e percurso metodológico do estudo de mestrado.
-
-## Pesquisa e desenvolvimento
-
-A página `pesquisa.html` apresenta uma frente institucional independente de pesquisa e desenvolvimento sobre valores, critérios e prioridades presentes na concepção da plataforma. A página não antecipa resultados, não afirma que uma orientação já foi confirmada e não publica respostas individuais. Documentos do projeto, versões do site e entrevistas autorizadas poderão formar o corpus, observadas as aprovações éticas aplicáveis.
 
 ## Fontes e limites
 
