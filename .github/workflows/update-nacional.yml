@@ -17,7 +17,7 @@ jobs:
       fail-fast: false
       max-parallel: 6
       matrix:
-        state: [AC, AL, AP, AM, BA, CE, DF, ES, GO, MA, MT, MS, MG, PA, PB, PR, PE, PI, RJ, RN, RS, RO, RR, SC, SP, SE, TO]
+       state: [AC, AL, AP, AM, BA, CE, DF, ES, GO, MA, MT, MS, MG, PA, PB, PR, PE, PI, RJ, RN, RS, RO, RR, SC, SE, TO]
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
