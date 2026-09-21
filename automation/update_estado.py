@@ -16,6 +16,27 @@ def col(df, names):
         if n in cols:return cols[n]
     raise RuntimeError("coluna ausente")
 def codes(s): return s.astype(str).str.replace(r"\.0$","",regex=True).str.strip().str[:6]
+def optional_col(df, names):
+    cols={str(c).upper():c for c in df.columns}
+    for n in names:
+        if n in cols:return cols[n]
+    return None
+def ratios(df, city_cols, definitions):
+    city=codes(df[col(df,city_cols)])
+    valid_city=city.str.len()==6
+    output={}
+    for name, candidates, evaluate in definitions:
+        field=optional_col(df,candidates)
+        if field is None:continue
+        series=df[field]
+        valid, positive=evaluate(series)
+        valid=valid & valid_city
+        positive=positive & valid
+        denominator=valid.groupby(city).sum()
+        numerator=positive.groupby(city).sum()
+        output[name]={str(code):{"n":int(numerator.get(code,0)),"d":int(total)}
+                      for code,total in denominator.items() if total>0}
+    return output
 def recent_months():
     n=datetime.now(timezone.utc); y,m=n.year,n.month-1
     if m==0:y,m=y-1,12
@@ -46,19 +67,54 @@ def annual(fn, uf, group, city_cols):
         except Exception:continue
     return {},None
 
+def annual_sinasc(uf):
+    definitions=[
+      ("prenatal_7_mais",["CONSPRENAT"],lambda s:(pd.to_numeric(s,errors="coerce").between(0,98),pd.to_numeric(s,errors="coerce")>=7)),
+      ("baixo_peso",["PESO"],lambda s:(pd.to_numeric(s,errors="coerce").between(1,9998),pd.to_numeric(s,errors="coerce")<2500)),
+      ("mae_adolescente",["IDADEMAE"],lambda s:(pd.to_numeric(s,errors="coerce").between(10,99),pd.to_numeric(s,errors="coerce").between(10,19))),
+      ("apgar5_menor_7",["APGAR5"],lambda s:(pd.to_numeric(s,errors="coerce").between(0,10),pd.to_numeric(s,errors="coerce")<7)),
+      ("anomalia_congenita",["IDANOMAL"],lambda s:(pd.to_numeric(s,errors="coerce").isin([1,2]),pd.to_numeric(s,errors="coerce")==1)),
+    ]
+    for y in range(datetime.now(timezone.utc).year-1,datetime.now(timezone.utc).year-6,-1):
+        try:
+            columns=["CODMUNRES","CONSPRENAT","PESO","IDADEMAE","APGAR5","IDANOMAL"]
+            df=frame(pysus.ftp.sinasc(state=uf,year=y,group="DN",columns=columns,as_dataframe=True,show_progress=False))
+            if df is None or df.empty:continue
+            key=codes(df[col(df,["CODMUNRES","MUN_RES"])]); totals=key[key.str.len()==6].value_counts()
+            if len(totals):return ({str(k):int(v) for k,v in totals.items()},str(y),ratios(df,["CODMUNRES","MUN_RES"],definitions))
+        except Exception:continue
+    values,period=annual(pysus.ftp.sinasc,uf,"DN",["CODMUNRES","MUN_RES"])
+    return values,period,{}
+
+def annual_sim(uf):
+    def cause_rule(s):
+        cause=s.astype(str).str.upper().str.replace(r"[^A-Z0-9]","",regex=True)
+        return (cause.str.len()>=3,cause.str.match(r"^R(?:0[0-9]|[1-8][0-9]|9[0-9])"))
+    definitions=[("causas_mal_definidas",["CAUSABAS","CAUSABAS_O"],cause_rule)]
+    for y in range(datetime.now(timezone.utc).year-1,datetime.now(timezone.utc).year-6,-1):
+        try:
+            columns=["CODMUNRES","CAUSABAS"]
+            df=frame(pysus.ftp.sim(state=uf,year=y,group="DO",columns=columns,as_dataframe=True,show_progress=False))
+            if df is None or df.empty:continue
+            key=codes(df[col(df,["CODMUNRES","MUN_RES"])]); totals=key[key.str.len()==6].value_counts()
+            if len(totals):return ({str(k):int(v) for k,v in totals.items()},str(y),ratios(df,["CODMUNRES","MUN_RES"],definitions))
+        except Exception:continue
+    values,period=annual(pysus.ftp.sim,uf,"DO",["CODMUNRES","MUN_RES"])
+    return values,period,{}
+
 def collect_indicator(name, uf):
     tasks={
-      "cnes":lambda:monthly(pysus.ftp.cnes,uf,"ST",["CODUFMUN","CO_MUNICIP"]),
-      "internacoes":lambda:monthly(pysus.ftp.sih,uf,"RD",["MUNIC_RES","MUNIC_MOV"]),
-      "mortalidade":lambda:annual(pysus.ftp.sim,uf,"DO",["CODMUNRES","MUN_RES"]),
-      "nascimentos":lambda:annual(pysus.ftp.sinasc,uf,"DN",["CODMUNRES","MUN_RES"]),
-      "ambulatorial":lambda:monthly(pysus.ftp.sia,uf,"PA",["PA_UFMUN","UFMUN"],"PA_QTDAPR"),
+      "cnes":lambda:(*monthly(pysus.ftp.cnes,uf,"ST",["CODUFMUN","CO_MUNICIP"]),{}),
+      "internacoes":lambda:(*monthly(pysus.ftp.sih,uf,"RD",["MUNIC_RES","MUNIC_MOV"]),{}),
+      "mortalidade":lambda:annual_sim(uf),
+      "nascimentos":lambda:annual_sinasc(uf),
+      "ambulatorial":lambda:(*monthly(pysus.ftp.sia,uf,"PA",["PA_UFMUN","UFMUN"],"PA_QTDAPR"),{}),
     }
     return tasks[name]()
 
 def collect_worker(name, uf, output):
-    values, competence=collect_indicator(name,uf)
-    Path(output).write_text(json.dumps({"values":values,"competence":competence},separators=(",",":")),encoding="utf-8")
+    values, competence, expanded=collect_indicator(name,uf)
+    Path(output).write_text(json.dumps({"values":values,"competence":competence,"expanded":expanded},separators=(",",":")),encoding="utf-8")
     del values
     gc.collect()
 
@@ -74,17 +130,23 @@ def main():
         process=context.Process(target=collect_worker,args=(name,uf,str(target)))
         process.start();process.join()
         if process.exitcode or not target.exists():
-            results[name]=({},None)
+            results[name]=({},None,{})
         else:
             item=json.loads(target.read_text(encoding="utf-8"))
-            results[name]=(item["values"],item["competence"])
+            results[name]=(item["values"],item["competence"],item.get("expanded",{}))
         target.unlink(missing_ok=True)
-    cnes,cnes_p=results["cnes"];sih,sih_p=results["internacoes"]
-    sim,sim_p=results["mortalidade"];nasc,nasc_p=results["nascimentos"]
-    sia,sia_p=results["ambulatorial"]
+    cnes,cnes_p,_=results["cnes"];sih,sih_p,_=results["internacoes"]
+    sim,sim_p,sim_x=results["mortalidade"];nasc,nasc_p,nasc_x=results["nascimentos"]
+    sia,sia_p,_=results["ambulatorial"]
     all_codes=set(cnes)|set(sih)|set(sim)|set(nasc)|set(sia)
+    def expanded_for(code):
+        result={}
+        for collection in (sim_x,nasc_x):
+            for name,values in collection.items():
+                if code in values:result[name]=values[code]
+        return result
     municipios={code:{"cnes":cnes.get(code),"internacoes":sih.get(code),"mortalidade":sim.get(code),
-      "nascimentos":nasc.get(code),"ambulatorial":sia.get(code)} for code in sorted(all_codes)}
+      "nascimentos":nasc.get(code),"ambulatorial":sia.get(code),"ampliados":expanded_for(code)} for code in sorted(all_codes)}
     data={"uf":uf,"atualizado_em":datetime.now(timezone.utc).isoformat(timespec="seconds"),
       "competencias":{"cnes":cnes_p,"internacoes":sih_p,"mortalidade":sim_p,"nascimentos":nasc_p,"ambulatorial":sia_p},
       "municipios":municipios}
