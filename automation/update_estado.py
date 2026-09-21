@@ -1,4 +1,4 @@
-"""Resume cinco bases do PySUS para todos os municÃ­pios de uma UF."""
+"""Resume cinco bases do PySUS para todos os municípios de uma UF."""
 import argparse, gc, json, subprocess, sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -167,4 +167,3 @@ def main():
     out=Path("generated")/f"{uf}.json";out.parent.mkdir(exist_ok=True)
     out.write_text(json.dumps(data,ensure_ascii=False,separators=(",",":")),encoding="utf-8")
 if __name__=="__main__":main()
-    
