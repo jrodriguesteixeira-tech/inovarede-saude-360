@@ -118,6 +118,29 @@
         max-width: 850px;
         line-height: 1.6;
       }
+      .quick-nav {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin: 24px 0 4px;
+      }
+      .quick-nav a {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 74px;
+        padding: 15px 17px;
+        border: 1px solid var(--line);
+        border-radius: 15px;
+        color: var(--ink);
+        background: #fff;
+        box-shadow: 0 8px 20px rgba(6,63,87,.05);
+        transition: transform .18s ease, border-color .18s ease;
+      }
+      .quick-nav a:hover { transform: translateY(-2px); border-color: #34b8a8; }
+      .quick-nav b { display: block; font-size: .94rem; }
+      .quick-nav small { display: block; margin-top: 3px; color: var(--muted); font-size: .76rem; line-height: 1.35; }
+      .quick-nav i { font-style: normal; color: var(--green); font-weight: 900; font-size: 1.25rem; }
 
       .student-highlight {
         display: grid;
@@ -158,17 +181,15 @@
         box-shadow: 0 7px 16px rgba(6, 63, 87, .18);
       }
       .hero {
-        background:
-          linear-gradient(90deg, rgba(3, 53, 75, 0.96) 0%, rgba(0, 112, 104, 0.82) 48%, rgba(0, 74, 91, 0.2) 100%),
-          url("equipe-saude-publica.jpg") center/cover;
+        background: linear-gradient(115deg, #063f57, #087b72);
         color: white;
-        padding: 44px 32px;
-        border-radius: 22px;
-        margin: 25px 0;
+        padding: 27px 30px;
+        border-radius: 18px;
+        margin: 16px 0 25px;
         display: grid;
         grid-template-columns: 1.4fr 0.6fr;
         gap: 30px;
-        box-shadow: 0 18px 44px rgba(14, 61, 58, 0.17);
+        box-shadow: 0 12px 28px rgba(14, 61, 58, 0.13);
       }
       .hero h2 {
         margin: 0 0 10px;
@@ -211,7 +232,7 @@
       .photo-copy span { font-size: .76rem; color: #d8f2ee; }
       .image-note { color: var(--muted); font-size: .72rem; margin: 8px 2px 0; }
       .section {
-        margin-top: 31px;
+        margin-top: 42px;
       }
       .section-head h2 {
         margin: 0 0 4px;
@@ -261,6 +282,31 @@
         line-height: 1.47;
         margin: 0;
       }
+      .project-details {
+        margin-top: 42px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: #fff;
+        overflow: hidden;
+      }
+      .project-details summary {
+        cursor: pointer;
+        list-style: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 19px 21px;
+        font-weight: 800;
+      }
+      .project-details summary::-webkit-details-marker { display: none; }
+      .project-details summary span { color: var(--muted); font-size: .84rem; font-weight: 500; }
+      .project-details summary::after { content: "+"; color: var(--green); font-size: 1.5rem; line-height: 1; }
+      .project-details[open] summary { border-bottom: 1px solid var(--line); }
+      .project-details[open] summary::after { content: "−"; }
+      .project-details-content { padding: 2px 21px 21px; }
+      .project-details .section { margin-top: 24px; }
+      .project-details .visual-story { margin-top: 22px; }
       .status {
         display: flex;
         justify-content: space-between;
@@ -704,6 +750,9 @@
         main {
           padding: 22px 15px;
         }
+        .quick-nav { grid-template-columns: 1fr; gap: 8px; }
+        .quick-nav a { min-height: 62px; }
+        .project-details-content { padding: 2px 15px 16px; }
         .hero {
           grid-template-columns: 1fr;
           padding: 21px;
@@ -774,6 +823,12 @@
             excelência assistencial no SUS.
           </p>
         </header>
+
+        <nav class="quick-nav" aria-label="Acessos principais">
+          <a href="#dashboard"><span><b>Indicadores municipais</b><small>Consultar dados consolidados e ampliados.</small></span><i>→</i></a>
+          <a href="area-aluno.html"><span><b>Área do Aluno</b><small>Cursos, materiais e acompanhamento da formação.</small></span><i>→</i></a>
+          <a href="#trl"><span><b>Maturidade tecnológica</b><small>Ver situação, evidências e próximos passos.</small></span><i>→</i></a>
+        </nav>
 
         <section class="student-highlight" aria-label="Destaque para a Área do Aluno">
           <div class="student-highlight-icon" aria-hidden="true">▶</div>
@@ -925,7 +980,10 @@
         </div>
           <a class="dashboard-link" href="#dados">Selecionar estado e município e abrir gráficos →</a>
         </section>
-        <section class="section" id="eixos">
+        <details class="project-details" id="eixos">
+          <summary>Conheça o projeto <span>Cinco eixos e a abordagem territorial</span></summary>
+          <div class="project-details-content">
+        <section class="section">
           <div class="section-head">
             <h2>Cinco eixos operacionais</h2>
             <p>
@@ -976,6 +1034,8 @@
           </article>
         </section>
         <p class="image-note">Imagens ilustrativas geradas para representar situações genéricas do serviço público de saúde; não retratam participantes reais do projeto.</p>
+          </div>
+        </details>
         <section class="section" id="dados">
           <div class="section-head">
             <h2>Dashboard consolidado de indicadores</h2>
