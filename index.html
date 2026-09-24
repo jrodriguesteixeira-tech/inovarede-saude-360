@@ -164,6 +164,13 @@
       .benchmark-card { padding:14px; border-radius:13px; background:#ffffff12; border:1px solid #ffffff2b; }
       .benchmark-card small { display:block; color:#bfe5df; }.benchmark-card strong { display:block; margin:5px 0; font-size:1rem; }.benchmark-card span { display:block; color:#d8f4f0; font-size:.74rem; line-height:1.4; }
       .method-details { margin-top:14px; padding-top:13px; border-top:1px solid #ffffff30; }.method-details summary { cursor:pointer; color:#d7ff58; font-weight:800; font-size:.82rem; }.method-details p { margin:9px 0 0; color:#d8f4f0; font-size:.78rem; line-height:1.5; }
+      .diagnosis-action { margin-top:16px; padding:11px 15px; border:0; border-radius:10px; background:#d7ff58; color:#173e38; font-weight:850; cursor:pointer; }
+      .diagnostic-disclosure > summary { cursor:pointer; list-style:none; font-size:1.08rem; font-weight:850; }
+      .diagnostic-disclosure > summary::-webkit-details-marker { display:none; }
+      .diagnostic-disclosure > summary::after { content:"+"; float:right; font-size:1.4rem; color:#d7ff58; }
+      .diagnostic-disclosure[open] > summary { margin-bottom:22px; }.diagnostic-disclosure[open] > summary::after { content:"−"; }
+      .indicator-info { margin-top:12px; padding:0; border:0; background:transparent; color:var(--green); font:inherit; font-size:.75rem; font-weight:850; text-align:left; cursor:pointer; }
+      .indicator-sheet { margin-top:16px; padding:14px; border-radius:13px; background:#ffffff16; border:1px solid #ffffff38; }.indicator-sheet[hidden]{display:none}.indicator-sheet h3{margin:0 0 7px;font-size:1rem}.indicator-sheet p{margin:5px 0;color:#d8f4f0;font-size:.79rem;line-height:1.45}
 
       .student-highlight {
         display: grid;
@@ -375,6 +382,7 @@
         border-radius: 14px;
       }
       .filter-field { display: grid; gap: 7px; }
+      .filter-intro { grid-column:1/-1; display:grid; gap:3px; color:#fff; }.filter-intro b{font-size:1.02rem}.filter-intro span{font-size:.78rem;color:#cceeea;}
       .filter-field label { color: var(--ink); font-size: 0.82rem; font-weight: 800; }
       .filter-field select {
         width: 100%; min-height: 44px; padding: 9px 38px 9px 12px;
@@ -498,6 +506,7 @@
       }
       .dashboard-spotlight > .filters { margin-top: 20px; background: #ffffff17; border-color: #ffffff38; }
       .dashboard-spotlight > .filters label { color: white; }
+      .dashboard-spotlight > .filters .diagnosis-action { align-self:end; margin:0; min-height:44px; }
       .goals-panel { margin-top: 20px; padding: 20px; border-radius: 18px; background: #032f42aa; border: 1px solid #ffffff30; }
       .goals-head { display: flex; justify-content: space-between; gap: 18px; align-items: start; }
       .goals-head h3 { margin: 0 0 5px; font-size: 1.2rem; }
@@ -905,6 +914,7 @@
             <div class="journey-step"><b>3. Aprofunde</b>Use os indicadores ampliados, gráficos e séries históricas.</div>
           </div>
           <div class="filters" aria-label="Filtros de localização">
+            <div class="filter-intro"><b>Qual município você deseja analisar?</b><span>Selecione a localidade para carregar o resumo executivo.</span></div>
             <div class="filter-field">
               <label for="state-select">Estado</label>
               <select id="state-select" aria-label="Selecione o estado">
@@ -917,6 +927,7 @@
                 <option value="">Carregando municípios…</option>
               </select>
             </div>
+            <button class="diagnosis-action" id="view-diagnosis" type="button">Ver diagnóstico</button>
           </div>
           <div class="status">
             <div class="status-left">
@@ -1003,7 +1014,8 @@
             </div>
             <p class="goal-disclaimer">Referência operacional do piloto. Não substitui metas pactuadas na Programação Anual de Saúde.</p>
           </section>
-        <div class="diagnostic-panel" id="diagnostico" aria-labelledby="diagnostico-title">
+        <details class="diagnostic-panel diagnostic-disclosure" id="diagnostico" aria-labelledby="diagnostico-title">
+          <summary>Ver diagnóstico completo <span>Indicadores, fichas técnicas e séries</span></summary>
           <div class="diagnostic-head">
             <div>
               <h2 id="diagnostico-title">Indicadores ampliados automáticos</h2>
@@ -1036,7 +1048,8 @@
           </div>
           <p class="diagnostic-note"><b>Leitura responsável:</b> cada sistema possui competência própria. As taxas são calculadas pelo painel com dados oficiais disponíveis e população do IBGE; servem ao diagnóstico e não substituem metas pactuadas ou análise epidemiológica.</p>
           <details class="method-details"><summary>Ver fonte, competência e critério de leitura</summary><p>Os cartões exibem a fonte e a competência utilizada. Indicadores ampliados são calculados a partir dos registros oficiais e da população estimada pelo IBGE. Diferenças entre competências devem ser consideradas antes de qualquer comparação ou decisão.</p></details>
-        </div>
+          <div class="indicator-sheet" id="indicator-sheet" hidden aria-live="polite"></div>
+        </details>
           <a class="dashboard-link" href="#dados">Ver gráficos e série histórica da localidade →</a>
         </section>
         <details class="project-details" id="eixos">
@@ -1660,6 +1673,37 @@
           card.hidden = selected !== "all" && card.dataset.dashboardIndicator !== selected;
         });
       };
+      document.getElementById("view-diagnosis").onclick = () => {
+        load();
+        document.querySelector(".executive-head").scrollIntoView({ behavior: "smooth", block: "start" });
+      };
+      const technicalSheets = {
+        "diag-cnes-rate": ["Estabelecimentos por 10 mil habitantes", "CNES ÷ população estimada pelo IBGE × 10.000.", "Representa registros de estabelecimentos, não capacidade assistencial nem qualidade do cuidado."],
+        "diag-hospital-rate": ["Internações por 100 mil habitantes", "Internações SIH/SUS ÷ população estimada pelo IBGE × 100.000.", "A leitura deve considerar que o SIH/SUS registra internações financiadas pelo SUS."],
+        "diag-mortality-rate": ["Mortalidade geral por 100 mil habitantes", "Óbitos SIM ÷ população estimada pelo IBGE × 100.000.", "A competência do SIM pode ser diferente da competência de outros sistemas."],
+        "diag-birth-rate": ["Natalidade por mil habitantes", "Nascidos vivos SINASC ÷ população estimada pelo IBGE × 1.000.", "Refere-se à residência da mãe, conforme a fonte utilizada."],
+        "diag-ambulatory-rate": ["Produção ambulatorial por habitante", "Procedimentos aprovados no SIA/SUS ÷ população estimada pelo IBGE.", "Não é medida de acesso individual nem de qualidade da assistência."],
+        "diag-productivity-rate": ["Relação produção–estrutura", "Procedimentos aprovados no SIA/SUS ÷ estabelecimentos registrados no CNES.", "É uma relação exploratória; não mede produtividade individual de unidades ou profissionais."],
+        "diag-prenatal-seven": ["Pré-natal com sete ou mais consultas", "Nascidos vivos com 7 ou mais consultas ÷ nascidos vivos com informação válida × 100.", "Indicador de acompanhamento registrado no SINASC."],
+        "diag-low-weight": ["Baixo peso ao nascer", "Nascidos vivos com peso inferior a 2.500 g ÷ nascidos vivos com informação válida × 100.", "Depende do preenchimento da declaração de nascido vivo."],
+        "diag-teen-mother": ["Mães adolescentes", "Nascidos vivos de mães de 10 a 19 anos ÷ nascidos vivos com informação válida × 100.", "Faixa etária definida no painel: 10 a 19 anos."],
+        "diag-low-apgar": ["Apgar menor que 7", "Nascidos vivos com Apgar do 5º minuto inferior a 7 ÷ nascidos vivos com informação válida × 100.", "Deve ser interpretado com cautela em localidades com pequeno número de nascimentos."],
+        "diag-anomaly": ["Anomalias congênitas informadas", "Nascidos vivos com anomalia congênita informada ÷ nascidos vivos com informação válida × 100.", "Registro sujeito à completude e à investigação do evento."],
+        "diag-ill-defined": ["Causas de óbito mal definidas", "Óbitos por causas mal definidas ÷ óbitos com causa básica informada × 100.", "Indicador de qualidade da informação de mortalidade; não representa causa clínica específica."]
+      };
+      document.querySelectorAll(".diagnostic-card").forEach((card) => {
+        const value = card.querySelector("strong");
+        if (!value || !technicalSheets[value.id]) return;
+        const button = document.createElement("button");
+        button.type = "button"; button.className = "indicator-info"; button.textContent = "Ver ficha técnica";
+        button.onclick = () => {
+          const [title, formula, limitation] = technicalSheets[value.id], meta = card.querySelector("p:last-child")?.textContent || "Fonte em atualização";
+          const sheet = document.getElementById("indicator-sheet");
+          sheet.innerHTML = `<h3>${title}</h3><p><b>Fonte, competência e localidade:</b> ${meta}</p><p><b>Fórmula:</b> ${formula}</p><p><b>Limitação:</b> ${limitation}</p>`;
+          sheet.hidden = false; sheet.scrollIntoView({behavior:"smooth", block:"nearest"});
+        };
+        card.append(button);
+      });
     </script>
   </body>
 </html>
