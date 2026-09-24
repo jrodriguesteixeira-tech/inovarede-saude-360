@@ -120,7 +120,7 @@
       }
       .quick-nav {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
         gap: 12px;
         margin: 24px 0 4px;
       }
@@ -141,6 +141,17 @@
       .quick-nav b { display: block; font-size: .94rem; }
       .quick-nav small { display: block; margin-top: 3px; color: var(--muted); font-size: .76rem; line-height: 1.35; }
       .quick-nav i { font-style: normal; color: var(--green); font-weight: 900; font-size: 1.25rem; }
+      .dashboard-trust {
+        margin-top: 14px;
+        padding: 10px 14px;
+        border-left: 3px solid #d7ff58;
+        border-radius: 8px;
+        background: rgba(255,255,255,.1);
+        color: #def6f1;
+        font-size: .8rem;
+        line-height: 1.45;
+      }
+      .dashboard-trust b { color: #fff; }
 
       .student-highlight {
         display: grid;
@@ -806,9 +817,7 @@
           <span>Inov@Rede 360</span>
         </div>
         <nav class="nav">
-          <a href="#projeto">Projeto</a><a href="#dashboard">Dashboard</a><a href="area-aluno.html">Área do Aluno</a><a href="#metas">Metas automáticas</a
-          ><a href="#eixos">Cinco eixos</a><a href="#dados">Dados detalhados</a
-          ><a href="#resultados">Resultados</a><a href="#trl">Maturidade</a>
+          <a href="#projeto">Início</a><a href="#dashboard">Indicadores</a><a href="area-aluno.html">Área do Aluno</a><a href="#trl">Maturidade</a>
         </nav>
         <div class="aside-foot">
           Inovação pública em saúde<br />Universidade Federal de Lavras
@@ -826,7 +835,6 @@
 
         <nav class="quick-nav" aria-label="Acessos principais">
           <a href="#dashboard"><span><b>Indicadores municipais</b><small>Consultar dados consolidados e ampliados.</small></span><i>→</i></a>
-          <a href="area-aluno.html"><span><b>Área do Aluno</b><small>Cursos, materiais e acompanhamento da formação.</small></span><i>→</i></a>
           <a href="#trl"><span><b>Maturidade tecnológica</b><small>Ver situação, evidências e próximos passos.</small></span><i>→</i></a>
         </nav>
 
@@ -875,6 +883,30 @@
               </select>
             </label>
           </div>
+          <p class="dashboard-trust"><b>Dados oficiais e rastreáveis:</b> IBGE, CNES, SIH/SUS, SIM, SINASC e SIA/SUS. Cada indicador informa sua competência conforme a disponibilidade da fonte.</p>
+          <div class="filters" aria-label="Filtros de localização">
+            <div class="filter-field">
+              <label for="state-select">Estado</label>
+              <select id="state-select" aria-label="Selecione o estado">
+                <option value="">Carregando estados…</option>
+              </select>
+            </div>
+            <div class="filter-field">
+              <label for="city-select">Município</label>
+              <select id="city-select" aria-label="Selecione o município" disabled>
+                <option value="">Carregando municípios…</option>
+              </select>
+            </div>
+          </div>
+          <div class="status">
+            <div class="status-left">
+              <i class="dot" id="dot"></i>
+              <div>
+                <strong id="status">Conectando ao IBGE</strong><small id="detail">Município 3138203</small>
+              </div>
+            </div>
+            <button class="sync" id="sync">↻ Atualizar</button>
+          </div>
           <div class="dashboard-summary">
             <article class="summary-card" data-dashboard-indicator="demografia">
               <small>População estimada</small>
@@ -884,7 +916,7 @@
             <article class="summary-card" data-dashboard-indicator="demografia">
               <small>Localidade pesquisada</small>
               <strong id="dashboard-locality">Lavras/MG</strong>
-              <span>Filtro disponível nos dados detalhados</span>
+              <span>Atualizada pelos filtros acima</span>
             </article>
             <article class="summary-card" data-dashboard-indicator="cnes">
               <small>Estabelecimentos no CNES</small>
@@ -978,7 +1010,7 @@
           </div>
           <p class="diagnostic-note"><b>Leitura responsável:</b> cada sistema possui competência própria. As taxas são calculadas pelo painel com dados oficiais disponíveis e população do IBGE; servem ao diagnóstico e não substituem metas pactuadas ou análise epidemiológica.</p>
         </div>
-          <a class="dashboard-link" href="#dados">Selecionar estado e município e abrir gráficos →</a>
+          <a class="dashboard-link" href="#dados">Ver gráficos e série histórica da localidade →</a>
         </section>
         <details class="project-details" id="eixos">
           <summary>Conheça o projeto <span>Cinco eixos e a abordagem territorial</span></summary>
@@ -1038,35 +1070,10 @@
         </details>
         <section class="section" id="dados">
           <div class="section-head">
-            <h2>Dashboard consolidado de indicadores</h2>
+            <h2>Gráficos e série histórica por localidade</h2>
             <p>
-              Consulte indicadores automáticos por localidade e acompanhe as
-              fontes integradas ao piloto, sem valores simulados.
+              Consulte a evolução e o detalhamento dos indicadores selecionados no painel acima.
             </p>
-          </div>
-          <div class="filters" aria-label="Filtros de localização">
-            <div class="filter-field">
-              <label for="state-select">Estado</label>
-              <select id="state-select" aria-label="Selecione o estado">
-                <option value="">Carregando estados…</option>
-              </select>
-            </div>
-            <div class="filter-field">
-              <label for="city-select">Município</label>
-              <select id="city-select" aria-label="Selecione o município" disabled>
-                <option value="">Carregando municípios…</option>
-              </select>
-            </div>
-          </div>
-          <div class="status">
-            <div class="status-left">
-              <i class="dot" id="dot"></i>
-              <div>
-                <strong id="status">Conectando ao IBGE</strong
-                ><small id="detail">Município 3138203</small>
-              </div>
-            </div>
-            <button class="sync" id="sync">↻ Atualizar</button>
           </div>
           <div class="cards">
             <article class="card">
