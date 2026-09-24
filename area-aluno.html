@@ -57,3 +57,4 @@ function escapeHtml(v){const d=document.createElement("div");d.textContent=v;ret
 if(client){client.auth.getSession().then(({data})=>render(data.session));client.auth.onAuthStateChange((_e,session)=>render(session))}
 </script>
 </body></html>
+ 
