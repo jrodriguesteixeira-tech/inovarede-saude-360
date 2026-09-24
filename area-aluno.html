@@ -1,60 +1,21 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Área do Aluno - Inov@Rede Saúde 360</title>
-<meta name="description" content="Área de formação do Inov@Rede Saúde 360.">
-<style>
-:root{--ink:#123532;--muted:#657976;--green:#008c7a;--dark:#063f57;--mint:#d8f7ef;--lime:#d6ff3f;--bg:#f4fbff;--line:#d6e7e4;--white:#fff;--red:#a93636}
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#eefbff,#e8f8f2);color:var(--ink);font:16px system-ui,-apple-system,sans-serif;min-height:100vh}a{color:inherit}
-.topbar{background:var(--dark);color:#fff;padding:16px clamp(18px,5vw,70px);display:flex;align-items:center;justify-content:space-between}.brand{font-weight:850;font-size:1.15rem;text-decoration:none}.back{color:#c8e5e1;text-decoration:none;font-size:.86rem}
-main{max-width:1180px;margin:auto;padding:42px 22px 70px}.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:28px;align-items:stretch}.intro{padding:38px;border-radius:25px;background:linear-gradient(135deg,var(--dark),#008d7e);color:#fff;box-shadow:0 20px 50px rgba(6,63,87,.16)}.intro .eyebrow{color:var(--lime);font-size:.76rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase}.intro h1{font-size:clamp(2.1rem,5vw,3.7rem);letter-spacing:-.05em;line-height:1;margin:10px 0 16px}.intro p{color:#d8f4f0;line-height:1.65}.feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:24px}.feature{padding:14px;border:1px solid rgba(255,255,255,.2);border-radius:13px;background:rgba(255,255,255,.08);font-size:.82rem}
-.auth{background:#fff;border:1px solid var(--line);border-radius:25px;padding:28px;box-shadow:0 18px 45px rgba(6,63,87,.1)}.auth h2{margin:0 0 5px}.auth>p{margin:0 0 20px;color:var(--muted);font-size:.88rem}.tabs{display:flex;gap:6px;margin-bottom:18px}.tabs button{flex:1;border:0;border-radius:10px;padding:10px;background:#edf5f3;color:var(--ink);font-weight:800;cursor:pointer}.tabs button.active{background:var(--green);color:#fff}
-label{display:block;font-size:.78rem;font-weight:800;margin:12px 0 5px}input{width:100%;border:1px solid #bfd6d2;border-radius:10px;padding:12px;font:inherit}.primary{width:100%;border:0;border-radius:11px;padding:12px;background:var(--dark);color:#fff;font-weight:850;margin-top:17px;cursor:pointer}.primary:disabled{opacity:.55;cursor:not-allowed}.linkbtn{border:0;background:transparent;color:var(--green);font-weight:750;padding:12px 0 0;cursor:pointer}.message{display:none;margin-top:14px;padding:11px;border-radius:9px;background:#eff8f6;font-size:.8rem;line-height:1.45}.message.show{display:block}.message.error{background:#fff0ef;color:var(--red)}.setup{margin-top:18px;padding:13px;border-radius:11px;background:#fff7d6;color:#6d5700;font-size:.78rem;line-height:1.5}
-.portal{display:none}.portal.show{display:block}.portal-head{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:22px}.logout{border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 15px;font-weight:750;cursor:pointer}.course-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.course{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden}.course-cover{height:110px;background:linear-gradient(135deg,var(--dark),var(--green));display:grid;place-items:center;color:var(--lime);font-size:2rem;font-weight:900}.course-body{padding:18px}.course h3{margin:0 0 7px}.course p{color:var(--muted);font-size:.82rem;line-height:1.45}.empty{grid-column:1/-1;padding:35px;text-align:center;border:1px dashed #a8c9c3;border-radius:16px;color:var(--muted);background:#fff}
-@media(max-width:850px){.hero{grid-template-columns:1fr}.course-grid{grid-template-columns:1fr 1fr}}@media(max-width:560px){main{padding:25px 14px}.intro,.auth{padding:22px}.feature-grid,.course-grid{grid-template-columns:1fr}.portal-head{align-items:start;flex-direction:column}}
-</style>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Área do Aluno — Inov@Rede Saúde 360</title>
+  <meta name="description" content="Espaço de formação do Inov@Rede Saúde 360.">
+  <style>
+    :root{--ink:#123532;--muted:#657976;--green:#008c7a;--dark:#063f57;--lime:#d6ff3f;--line:#d6e7e4}*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#eefbff,#e8f8f2);color:var(--ink);font:16px system-ui,-apple-system,sans-serif}.topbar{background:var(--dark);color:#fff;padding:16px clamp(18px,5vw,70px);display:flex;justify-content:space-between;gap:20px}.topbar a{color:inherit;text-decoration:none}.brand{font-weight:850;font-size:1.15rem}.back{color:#c8e5e1!important;font-size:.86rem}main{max-width:1120px;margin:auto;padding:42px 22px 70px}.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:28px}.intro,.access{border-radius:25px;padding:38px}.intro{background:linear-gradient(135deg,var(--dark),#008d7e);color:#fff;box-shadow:0 20px 50px rgba(6,63,87,.16)}.eyebrow{color:var(--lime);font-size:.76rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase}.intro h1{font-size:clamp(2.2rem,5vw,3.7rem);line-height:1;margin:10px 0 16px;letter-spacing:-.05em}.intro p{line-height:1.65;color:#d8f4f0}.feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:24px}.feature{padding:14px;border:1px solid #ffffff38;border-radius:13px;background:#ffffff12;font-size:.82rem}.access{background:#fff;border:1px solid var(--line);box-shadow:0 18px 45px rgba(6,63,87,.1)}.access h2{margin:8px 0}.access p{color:var(--muted);line-height:1.55}.notice{margin:22px 0;padding:15px;border-radius:13px;background:#fff7d6;color:#6d5700;font-size:.87rem;line-height:1.55}.actions{display:grid;gap:10px;margin-top:22px}.button{display:block;padding:13px 15px;border-radius:11px;background:var(--green);color:#fff!important;text-align:center;text-decoration:none;font-weight:850}.button.secondary{background:#edf5f3;color:var(--ink)!important;border:1px solid var(--line)}.next{margin-top:28px;padding:22px;border-radius:18px;background:#fff;border:1px solid var(--line)}.next h2{margin:0 0 8px}.next p{margin:0;color:var(--muted);line-height:1.55}@media(max-width:760px){main{padding:25px 14px}.hero{grid-template-columns:1fr}.intro,.access{padding:25px}.feature-grid{grid-template-columns:1fr}}
+  </style>
 </head>
 <body>
-<header class="topbar"><a class="brand" href="index.html">Inov@Rede Saúde 360</a><a class="back" href="index.html">← Voltar ao painel público</a></header>
-<main>
-<section class="hero" id="auth-view">
-  <div class="intro"><span class="eyebrow">Formação continuada no SUS</span><h1>Área do Aluno</h1><p>Ambiente reservado para cursos, aulas, materiais e acompanhamento da formação das equipes participantes.</p><div class="feature-grid"><div class="feature">Cursos organizados por trilhas</div><div class="feature">Aulas e materiais em um só lugar</div><div class="feature">Progresso individual registrado</div><div class="feature">Acesso protegido por autenticação</div></div></div>
-  <div class="auth">
-    <div class="tabs"><button class="active" data-tab="login">Entrar</button><button data-tab="signup">Criar conta</button></div>
-    <h2 id="form-title">Acesso à formação</h2><p id="form-subtitle">A autenticação será liberada quando a área de cursos estiver conectada ao ambiente institucional.</p>
-    <form id="auth-form">
-      <div id="name-field" hidden><label for="name">Nome completo</label><input id="name" autocomplete="name"></div>
-      <label for="email">E-mail</label><input id="email" type="email" autocomplete="email" required>
-      <label for="password">Senha</label><input id="password" type="password" minlength="8" autocomplete="current-password" required>
-      <button class="primary" id="submit" type="submit">Entrar</button>
-    </form>
-    <button class="linkbtn" id="reset" type="button">Esqueci minha senha</button>
-    <div class="message" id="message"></div>
-    <div class="setup" id="setup"><b>Área em preparação.</b> Cursos, materiais e acompanhamento serão disponibilizados após a ativação institucional do ambiente. Não é necessário criar senha neste momento.</div>
-  </div>
-</section>
-<section class="portal" id="portal">
-  <div class="portal-head"><div><span class="eyebrow">Ambiente autenticado</span><h1>Meus cursos</h1><p id="welcome"></p></div><button class="logout" id="logout">Sair</button></div>
-  <div class="course-grid" id="courses"><div class="empty">Os cursos publicados aparecerão aqui automaticamente.</div></div>
-</section>
-</main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-config.js"></script>
-<script>
-const cfg=window.INOVAREDE_SUPABASE||{},configured=cfg.url&&!cfg.url.includes("COLE_AQUI")&&cfg.publishableKey&&!cfg.publishableKey.includes("COLE_AQUI");
-const client=configured?window.supabase.createClient(cfg.url,cfg.publishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}):null;
-const form=document.getElementById("auth-form"),msg=document.getElementById("message"),setup=document.getElementById("setup"),submit=document.getElementById("submit"),nameField=document.getElementById("name-field");
-let mode="login";
-function message(text,error=false){msg.textContent=text;msg.className="message show"+(error?" error":"")}
-document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{mode=b.dataset.tab;document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("active",x===b));nameField.hidden=mode!=="signup";document.getElementById("form-title").textContent=mode==="signup"?"Crie sua conta":"Acesse sua formação";document.getElementById("form-subtitle").textContent=mode==="signup"?"O cadastro poderá exigir confirmação por e-mail.":"Entre com seu e-mail institucional ou cadastrado.";submit.textContent=mode==="signup"?"Criar conta":"Entrar";msg.className="message"});
-if(!configured){submit.disabled=true;document.getElementById("reset").disabled=true}else setup.hidden=true;
-form.onsubmit=async e=>{e.preventDefault();if(!client)return;submit.disabled=true;message("Processando...");const email=document.getElementById("email").value.trim(),password=document.getElementById("password").value;try{if(mode==="signup"){const full_name=document.getElementById("name").value.trim();const {error}=await client.auth.signUp({email,password,options:{data:{full_name}}});if(error)throw error;message("Cadastro enviado. Verifique seu e-mail para confirmar o acesso.")}else{const {error}=await client.auth.signInWithPassword({email,password});if(error)throw error}}catch(err){message(err.message||"Não foi possível concluir.",true)}finally{submit.disabled=false}};
-document.getElementById("reset").onclick=async()=>{const email=document.getElementById("email").value.trim();if(!email)return message("Informe seu e-mail primeiro.",true);const {error}=await client.auth.resetPasswordForEmail(email,{redirectTo:location.href});message(error?error.message:"Enviamos as instruções de recuperação para seu e-mail.",!!error)};
-document.getElementById("logout").onclick=()=>client.auth.signOut();
-async function render(session){document.getElementById("auth-view").style.display=session?"none":"";document.getElementById("portal").classList.toggle("show",!!session);if(!session)return;document.getElementById("welcome").textContent=session.user.user_metadata?.full_name||session.user.email;const {data,error}=await client.from("courses").select("id,title,description,cover_url").eq("published",true).order("created_at",{ascending:false});const box=document.getElementById("courses");if(error||!data?.length){box.innerHTML='<div class="empty">Nenhum curso foi publicado para sua conta até o momento.</div>';return}box.innerHTML=data.map(c=>'<article class="course"><div class="course-cover">360</div><div class="course-body"><h3>'+escapeHtml(c.title)+'</h3><p>'+escapeHtml(c.description||"Conteúdo formativo do Inov@Rede Saúde 360.")+'</p></div></article>').join("")}
-function escapeHtml(v){const d=document.createElement("div");d.textContent=v;return d.innerHTML}
-if(client){client.auth.getSession().then(({data})=>render(data.session));client.auth.onAuthStateChange((_e,session)=>render(session))}
-</script>
-</body></html>
- 
+  <header class="topbar"><a class="brand" href="index.html">Inov@Rede Saúde 360</a><a class="back" href="index.html">← Voltar ao painel público</a></header>
+  <main>
+    <section class="hero">
+      <div class="intro"><span class="eyebrow">Formação continuada no SUS</span><h1>Área do Aluno</h1><p>Espaço destinado a cursos, aulas, materiais e acompanhamento da formação das equipes participantes.</p><div class="feature-grid"><div class="feature">Trilhas organizadas por tema</div><div class="feature">Aulas e materiais em um só lugar</div><div class="feature">Acompanhamento individual</div><div class="feature">Acesso institucional protegido</div></div></div>
+      <div class="access"><span class="eyebrow">Em implantação</span><h2>Formação em preparação</h2><p>Os cursos serão liberados após a ativação institucional do ambiente. Por enquanto, não é necessário criar senha nem informar dados pessoais.</p><div class="notice"><b>Próxima etapa:</b> definição das trilhas, dos participantes e do responsável pelo acesso institucional.</div><div class="actions"><a class="button" href="mailto:?subject=Interesse%20na%20%C3%81rea%20do%20Aluno%20-%20Inov%40Rede%20Sa%C3%BAde%20360">Solicitar acesso</a><a class="button secondary" href="index.html#eixos">Conhecer as trilhas e os eixos do projeto</a></div></div>
+    </section>
+    <section class="next"><h2>Como funcionará</h2><p>Quando a formação for ativada, cada participante receberá as orientações e o acesso institucional adequado. A apresentação pública do projeto continua disponível no painel principal.</p></section>
+  </main>
+</body>
+</html>
