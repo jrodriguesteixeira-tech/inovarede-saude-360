@@ -152,6 +152,18 @@
         line-height: 1.45;
       }
       .dashboard-trust b { color: #fff; }
+      .skip-link { position:absolute; left:-9999px; top:8px; z-index:20; padding:10px 14px; border-radius:8px; background:#fff; color:#063f57; font-weight:800; }
+      .skip-link:focus { left:12px; }
+      a:focus-visible, button:focus-visible, select:focus-visible, summary:focus-visible { outline: 3px solid #d7ff58; outline-offset: 3px; }
+      .dashboard-journey { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:17px 0 0; }
+      .journey-step { padding:11px 12px; border:1px solid #ffffff35; border-radius:12px; background:#ffffff10; color:#dff7f3; font-size:.78rem; line-height:1.4; }
+      .journey-step b { display:block; color:#d7ff58; margin-bottom:3px; font-size:.72rem; letter-spacing:.04em; text-transform:uppercase; }
+      .executive-head { display:flex; justify-content:space-between; align-items:end; gap:16px; margin-top:20px; }
+      .executive-head h3 { margin:0 0 4px; font-size:1.15rem; }.executive-head p { margin:0; color:#cceeea; font-size:.82rem; }
+      .benchmark { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:13px; }
+      .benchmark-card { padding:14px; border-radius:13px; background:#ffffff12; border:1px solid #ffffff2b; }
+      .benchmark-card small { display:block; color:#bfe5df; }.benchmark-card strong { display:block; margin:5px 0; font-size:1rem; }.benchmark-card span { display:block; color:#d8f4f0; font-size:.74rem; line-height:1.4; }
+      .method-details { margin-top:14px; padding-top:13px; border-top:1px solid #ffffff30; }.method-details summary { cursor:pointer; color:#d7ff58; font-weight:800; font-size:.82rem; }.method-details p { margin:9px 0 0; color:#d8f4f0; font-size:.78rem; line-height:1.5; }
 
       .student-highlight {
         display: grid;
@@ -684,6 +696,8 @@
       .trl-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 12px; }
       .trl-warning { margin-top: 14px; color: #c7ebe6; font-size: .75rem; line-height: 1.5; }
       @media (max-width: 700px) {
+
+        .dashboard-journey, .benchmark { grid-template-columns:1fr; }
         .trl-hero { grid-template-columns: auto 1fr; }
         .trl-validation { grid-column: 1 / -1; width: fit-content; }
         .trl-cards { grid-template-columns: 1fr; }
@@ -810,6 +824,7 @@
     </style>
   </head>
   <body>
+    <a class="skip-link" href="#dashboard">Ir diretamente ao painel de indicadores</a>
     <div class="shell">
       <aside>
         <div class="brand">
@@ -884,6 +899,11 @@
             </label>
           </div>
           <p class="dashboard-trust"><b>Dados oficiais e rastreáveis:</b> IBGE, CNES, SIH/SUS, SIM, SINASC e SIA/SUS. Cada indicador informa sua competência conforme a disponibilidade da fonte.</p>
+          <div class="dashboard-journey" aria-label="Como usar o painel">
+            <div class="journey-step"><b>1. Selecione</b>Escolha o estado e o município que deseja analisar.</div>
+            <div class="journey-step"><b>2. Consulte</b>Leia primeiro o resumo com os dados essenciais da localidade.</div>
+            <div class="journey-step"><b>3. Aprofunde</b>Use os indicadores ampliados, gráficos e séries históricas.</div>
+          </div>
           <div class="filters" aria-label="Filtros de localização">
             <div class="filter-field">
               <label for="state-select">Estado</label>
@@ -907,7 +927,8 @@
             </div>
             <button class="sync" id="sync">↻ Atualizar</button>
           </div>
-          <div class="dashboard-summary">
+          <div class="executive-head"><div><h3>Resumo executivo da localidade</h3><p>Informações principais para uma leitura inicial, antes do detalhamento.</p></div></div>
+          <div class="dashboard-summary" aria-label="Resumo executivo da localidade">
             <article class="summary-card" data-dashboard-indicator="demografia">
               <small>População estimada</small>
               <strong id="dashboard-population">Carregando…</strong>
@@ -948,6 +969,11 @@
               <strong id="dashboard-ambulatorial">Carregando…</strong>
               <span id="dashboard-ambulatorial-meta">SIA/SUS • local de atendimento</span>
             </article>
+          </div>
+          <div class="benchmark" aria-label="Comparação contextual">
+            <article class="benchmark-card"><small>Leitura territorial</small><strong id="comparison-local">Localidade selecionada</strong><span id="comparison-local-detail">Os resultados abaixo são atualizados pelos filtros.</span></article>
+            <article class="benchmark-card"><small>Referência estadual</small><strong id="comparison-state">Calculando…</strong><span id="comparison-state-detail">Comparação com o total disponível no estado.</span></article>
+            <article class="benchmark-card"><small>Referência nacional</small><strong>Em integração</strong><span>Cobertura nacional ainda está sendo consolidada; nenhum valor parcial é apresentado como Brasil.</span></article>
           </div>
           <section class="goals-panel" id="metas" aria-labelledby="goals-title">
             <div class="goals-head">
@@ -1009,6 +1035,7 @@
             <article class="diagnostic-card outcome" data-diagnostic="outcome"><div><small>Qualidade da informação</small><strong id="diag-ill-defined">—</strong><p>Óbitos cuja causa básica pertence ao capítulo de causas mal definidas.</p></div><p id="diag-ill-defined-meta">Aguardando atualização automática.</p></article>
           </div>
           <p class="diagnostic-note"><b>Leitura responsável:</b> cada sistema possui competência própria. As taxas são calculadas pelo painel com dados oficiais disponíveis e população do IBGE; servem ao diagnóstico e não substituem metas pactuadas ou análise epidemiológica.</p>
+          <details class="method-details"><summary>Ver fonte, competência e critério de leitura</summary><p>Os cartões exibem a fonte e a competência utilizada. Indicadores ampliados são calculados a partir dos registros oficiais e da população estimada pelo IBGE. Diferenças entre competências devem ser consideradas antes de qualquer comparação ou decisão.</p></details>
         </div>
           <a class="dashboard-link" href="#dados">Ver gráficos e série histórica da localidade →</a>
         </section>
@@ -1488,14 +1515,18 @@
           if (!response.ok) throw Error();
           const data = await response.json();
           const values = {}, displayedCompetences = {...(data.competencias || {})};
+          const stateValues = {};
+          const allCities = Object.values(data.municipios || {});
+          keys.forEach((key) => {
+            const entries = allCities.map((city) => city[key]).filter((value) => Number.isFinite(value));
+            stateValues[key] = entries.length ? entries.reduce((sum, value) => sum + value, 0) : null;
+          });
           let expanded = {};
           if (place.kind === "Estado") {
-            const cities = Object.values(data.municipios || {});
             keys.forEach((key) => {
-              const entries = cities.map((city) => city[key]).filter((v) => Number.isFinite(v));
-              values[key] = entries.length ? entries.reduce((a, b) => a + b, 0) : null;
+              values[key] = stateValues[key];
             });
-            expanded = aggregateExpanded(cities);
+            expanded = aggregateExpanded(allCities);
           } else {
             const cityCode = String(place.id).slice(0, 6);
             Object.assign(values, data.municipios?.[cityCode] || {});
@@ -1517,6 +1548,25 @@
           });
           window.currentHealthValues = values;
           window.currentHealthCompetences = displayedCompetences;
+          const comparisonLocal = document.getElementById("comparison-local"),
+            comparisonLocalDetail = document.getElementById("comparison-local-detail"),
+            comparisonState = document.getElementById("comparison-state"),
+            comparisonStateDetail = document.getElementById("comparison-state-detail");
+          comparisonLocal.textContent = locationLabel;
+          if (place.kind === "Estado") {
+            comparisonLocalDetail.textContent = "Você está consultando o total disponível para o estado selecionado.";
+            comparisonState.textContent = "Referência consultada";
+            comparisonStateDetail.textContent = "Os valores do resumo representam a agregação dos municípios processados.";
+          } else if (Number.isFinite(values.cnes) && Number.isFinite(stateValues.cnes) && stateValues.cnes > 0) {
+            const share = values.cnes / stateValues.cnes * 100;
+            comparisonLocalDetail.textContent = "Resumo e diagnóstico referem-se exclusivamente à localidade selecionada.";
+            comparisonState.textContent = share.toFixed(2).replace(".", ",") + "% do CNES estadual";
+            comparisonStateDetail.textContent = "Participação da localidade no total de estabelecimentos disponível para " + place.uf + ".";
+          } else {
+            comparisonLocalDetail.textContent = "Resumo e diagnóstico referem-se exclusivamente à localidade selecionada.";
+            comparisonState.textContent = "Dados em processamento";
+            comparisonStateDetail.textContent = "A referência estadual será exibida quando houver dados compatíveis.";
+          }
           renderExpandedIndicators(values, place, displayedCompetences, expanded);
           const currentAmb = values.ambulatorial,
             cityCodeForGoal = place.kind === "Estado" ? null : String(place.id).slice(0, 6),
